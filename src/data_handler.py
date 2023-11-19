@@ -19,10 +19,10 @@ def check_and_convert_types(df):
         'alt_name': str,    # alt name should be string
         'ra': float,        # right assencion should be float
         'dec': float,       # declination should be float
-        'by_color': float,  # color (bv) should be float
+        'bv_color': float,  # color (bv) should be float
         'parallax': float   # parallax should be float
     }
-    
+
     # column and type in the expected types dictionary
     for column, expected_type in expected_types.items():
         # check if column exists in dataframe

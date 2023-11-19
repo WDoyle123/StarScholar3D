@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def plot_3d_scatter(x, y, z):
+def plot_3d_scatter(x, y, z, rgb):
     '''
     Creates a 3D plot using Cartesian coordinates with a black background,
     white points, grey axes, and black grid panes.
@@ -15,7 +15,7 @@ def plot_3d_scatter(x, y, z):
     ax.set_facecolor('black')
 
     # create scatter plot on the 3d projection
-    ax.scatter(x, y, z, s=15, color='white', edgecolor='white')
+    ax.scatter(x, y, z, color=rgb, s=15)
 
     # set labels and title with grey color
     ax.set_xlabel('X Coordinate', color='grey')
