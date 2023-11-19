@@ -19,6 +19,7 @@ def check_and_convert_types(df):
         'alt_name': str,    # alt name should be string
         'ra': float,        # right assencion should be float
         'dec': float,       # declination should be float
+        'by_color': float,  # color (bv) should be float
         'parallax': float   # parallax should be float
     }
     
