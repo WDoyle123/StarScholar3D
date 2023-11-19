@@ -3,6 +3,7 @@ import pandas
 
 from data_handler import load_data, check_and_convert_types
 from calculations import calculate_distance, calculate_x_coordinate, calculate_y_coordinate, calculate_z_coordinate
+from plotter import plot_3d_scatter
 
 # current directory
 current_dir = os.path.dirname('src')
@@ -39,3 +40,4 @@ for index, row in df.iterrows():
     y_coordinates_array.append(y_coordinate)
     z_coordinates_array.append(z_coordinate)
 
+plot_3d_scatter(x_coordinates_array, y_coordinates_array, z_coordinates_array)
