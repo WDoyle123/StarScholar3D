@@ -2,14 +2,14 @@ import os
 import pandas as pd
 
 from data_handler import load_data, check_and_convert_types
-from calculations import calculate_distance, calculate_x_coordinate, calculate_y_coordinate, calculate_z_coordinate, bv_color_to_rgb
+from calculations import calculate_distance, calculate_x_coordinate, calculate_y_coordinate, calculate_z_coordinate, bv_color_to_rgb, degrees_to_radians
 from plotter import plot_3d_scatter
 
 # current directory
 current_dir = os.path.dirname('src') 
 
 # directory of data relative to current directory
-data_file_path = os.path.join(current_dir, '..', 'data', 'data.csv')
+data_file_path = os.path.join(current_dir, '..', 'data', 'data_j2000.csv')
 
 # load data from csv to pandas dataframe
 df = load_data(data_file_path)
@@ -36,8 +36,8 @@ name_mapping = {
 df['common_name'] = df['alt_name'].map(name_mapping)
 
 # Manually adjust the entries for Mizar A and Mizar B
-mizar_a_coords = (113.11073, 61.57916)
-mizar_b_coords = (113.10430, 61.58205)
+mizar_a_coords = (200.9850, 54.9217)
+mizar_b_coords = (200.9812, 54.9253)
 
 for index, row in df.iterrows():
     if row['alt_name'] == '79Zet UMa':
@@ -53,13 +53,18 @@ df = df.sort_values(by='common_name')
 # remove any NaN and zero values found in parallax column
 df = df[(df['parallax'].notna() & df.parallax != 0)]
 
+df['dec'] = df.apply(lambda row: degrees_to_radians(row['dec']), axis=1)
+df['ra'] = df.apply(lambda row: degrees_to_radians(row['ra']), axis=1)
+
 # Calculate x, y, z coordinates and RGB colors, and add them to the DataFrame
 df['distance'] = df.apply(lambda row: calculate_distance(row['parallax']), axis=1)
-df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate(calculate_distance(row['distance']), row['dec'], row['ra']), axis=1)
-df['y_coordinate'] = df.apply(lambda row: calculate_y_coordinate(calculate_distance(row['distance']), row['dec'], row['ra']), axis=1)
-df['z_coordinate'] = df.apply(lambda row: calculate_z_coordinate(calculate_distance(row['distance']), row['dec']), axis=1)
+
+df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
+
+df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
+df['y_coordinate'] = df.apply(lambda row: calculate_y_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
+df['z_coordinate'] = df.apply(lambda row: calculate_z_coordinate((row['distance']), row['dec']), axis=1)
 df['rgb_color'] = df['bv_color'].apply(bv_color_to_rgb)
 
 print(df)
-
 plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values)
