@@ -6,7 +6,7 @@ from calculations import calculate_distance, calculate_x_coordinate, calculate_y
 from plotter import plot_3d_scatter
 
 # current directory
-current_dir = os.path.dirname(__file__)  # Corrected to get the actual script directory
+current_dir = os.path.dirname('src') 
 
 # directory of data relative to current directory
 data_file_path = os.path.join(current_dir, '..', 'data', 'data.csv')
