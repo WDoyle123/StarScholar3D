@@ -9,7 +9,7 @@ from plotter import plot_3d_scatter
 current_dir = os.path.dirname('src')
 
 # directory of data relative to current directory
-data_file_path = os.path.join(current_dir, '..', 'data', 'data.csv')
+data_file_path = os.path.join(current_dir, '..', 'data', 'data_j2000.csv')
 
 # load data from csv to pandas dataframe
 df = load_data(data_file_path)
