@@ -22,7 +22,7 @@ Below are some visualizations created using StarScholar3D:
 *Visualization of the Big Dipper asterism.*
 
 ## License
-This project is licensed under the [LICENSE NAME] - see the [LICENSE.md](LICENSE.md) file for details.
+see the [LICENSE.md](LICENSE.md) file for details.
 
 ## Acknowledgments
 - Yale Bright Star Catalogue
