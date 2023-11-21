@@ -23,6 +23,9 @@ Below are some visualisations created using StarScholar3D:
 ![Big Dipper](big_dipper.png)
 *Visualisation of the Big Dipper asterism.*
 
+![Big Dipper Rotating](big_dipper.gif)
+*Rotating Big Dipper asterism.*
+
 ## License
 see the [LICENSE](LICENSE) file for details.
 
