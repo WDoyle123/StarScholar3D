@@ -4,3 +4,5 @@ Using real star data with the aim of generating 3D plots of constellations and t
 # WIP
 
 ![3D star map](fig_1.png)
+
+![big_dipper](big_dipper.png)
