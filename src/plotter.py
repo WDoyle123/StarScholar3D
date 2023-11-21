@@ -1,5 +1,9 @@
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import imageio
+import io
+import cv2
+import numpy as np
 
 def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
     '''
@@ -68,6 +72,30 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
         ax.view_init(45, 45)
 
     # show plot
-    plt.show()
-    return None
+    #    plt.show()
+    return fig, ax
 
+def img_from_fig(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', dpi=180)
+    buf.seek(0)
+    img_arr = np.frombuffer(buf.getvalue(), dtype=np.uint8)
+    buf.close()
+    img = cv2.imdecode(img_arr, 1)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    return img
+
+def capture_gif(fig, ax):
+    fps = 20
+    pause_duration_sec = 5
+    pause_frames = pause_duration_sec * fps
+    initial_img = img_from_fig(fig)
+    initial_img_pause = initial_img * pause_frames
+    frames = []
+    frames.append(initial_img_pause)
+    for angle in range(0, 360, 1):
+        ax.view_init(30, angle)
+        img = img_from_fig(fig)
+        frames.append(img)
+    imageio.mimsave('plot_new.gif', frames, fps=fps)
