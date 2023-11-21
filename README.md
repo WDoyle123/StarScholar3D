@@ -1,11 +1,11 @@
 # StarScholar3D
 
 ## Overview
-StarScholar3D is an innovative project that leverages the extensive data from the Yale Bright Star catalogue. This project is centered around the visualization and study of stars, constellations, and asterisms in a dynamic 3D environment. By transforming equatorial coordinates into cartesian coordinates, StarScholar3D offers a unique perspective on the celestial bodies that have fascinated humanity for millennia.
+StarScholar3D is an innovative project that leverages the extensive data from the Yale Bright Star catalogue. This project is centered around the visualisation and study of stars, constellations, and asterisms in a dynamic 3D environment. By transforming equatorial coordinates into cartesian coordinates, StarScholar3D offers a unique perspective on the celestial bodies.
 
 ## Features
-- **Data Utilization**: Utilizes the comprehensive Yale Bright Star catalogue.
-- **3D Visualization**: Plots stars, constellations, and asterisms in an interactive 3D space.
+- **Data Utilisation**: Utilises the comprehensive Yale Bright Star catalogue.
+- **3D Visualisation**: Plots stars, constellations, and asterisms in an interactive 3D space.
 - **Coordinate Transformation**: Converts equatorial coordinates to cartesian coordinates for accurate 3D plotting.
 - **Interactive Experience**: Enables users to explore and interact with the 3D star map.
 
