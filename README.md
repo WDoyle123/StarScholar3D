@@ -13,13 +13,13 @@ StarScholar3D is an innovative project that leverages the extensive data from th
 Please note that StarScholar3D is currently a work in progress. Features are being actively developed and refined. Contributions, suggestions, and feedback are highly welcomed!
 
 ## Visualisations
-Below are some visualizations created using StarScholar3D:
+Below are some visualisations created using StarScholar3D:
 
 ![3D star map](fig_1.png)
 *3D representation of the star map.*
 
 ![Big Dipper](big_dipper.png)
-*Visualization of the Big Dipper asterism.*
+*Visualisation of the Big Dipper asterism.*
 
 ## License
 see the [LICENSE](LICENSE) file for details.
