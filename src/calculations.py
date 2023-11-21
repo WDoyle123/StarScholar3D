@@ -12,6 +12,8 @@ def calculate_distance(parallax):
     '''
     return 1 / parallax
 
+# source for calculating x,y,z https://www.jameswatkins.me/posts/converting-equatorial-to-cartesian.html
+
 def calculate_x_coordinate(distance, declination, right_ascension):
     '''
     calculate x coordinate in cartesian space
