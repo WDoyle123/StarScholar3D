@@ -55,7 +55,7 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None):
     ax.zaxis.pane.set_edgecolor('black')
 
     # viewing angle (elevation, azimuth)
-    ax.view_init(-44, -5)
+    ax.view_init(-43, -2)
 
     # show plot
     plt.show()

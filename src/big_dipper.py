@@ -18,14 +18,15 @@ df = load_data(data_file_path)
 df = check_and_convert_types(df)
 
 # Big Dipper stars in Ursa Major
-big_dipper_stars = ['79Zet UMa', '77Eps UMa', '69Del UMa', '64Gam UMa', '48Bet UMa', '50Alp UMa']
-ordered_star_names = ['Mizar', 'Alcor', 'Alioth', 'Megrez', 'Dubhe', 'Merak', 'Phecda']
+big_dipper_stars = ['79Zet UMa', '77Eps UMa', '69Del UMa', '64Gam UMa', '48Bet UMa', '50Alp UMa', '85Eta UMa']
+ordered_star_names = ['Alkaid', 'Mizar', 'Alcor', 'Alioth', 'Megrez', 'Dubhe', 'Merak', 'Phecda']
 
 # filter the df to include only the Big Dipper stars
 df = df[df['alt_name'].isin(big_dipper_stars)]
 
 # map alternative names to common names
 name_mapping = {
+    '85Eta UMa': 'Alkaid',    
     '79Zet UMa': 'Mizar',
     '77Eps UMa': 'Alioth',
     '69Del UMa': 'Megrez',
