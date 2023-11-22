@@ -4,6 +4,13 @@ import imageio
 import io
 import cv2
 import numpy as np
+import os
+
+def star_size(x):
+    if len(x) < 10:
+        return 30
+    else:
+        return 15
 
 def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
     '''
@@ -18,8 +25,11 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
     ax = fig.add_subplot(111, projection='3d')
     ax.set_facecolor('black')
 
+    # calculate the size of stars (not to scale)
+    s = star_size(x)
+
     # create scatter plot on the 3d projection
-    scatter = ax.scatter(x, y, z, color=rgb, s=15)
+    scatter = ax.scatter(x, y, z, color=rgb, s=s)
 
     # add annotations if star names are provided
     if star_names is not None:
@@ -69,11 +79,23 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
     if view is not None:
         ax.view_init(view[0], view[1])
     else:
-        ax.view_init(45, 45)
+        view = (45, 45)
+        ax.view_init(view[0], view[1])
 
-    # show plot
-    #    plt.show()
-    return fig, ax
+    # path to figures directory
+    figures_directory = os.path.join('..', 'figures')
+    
+    # makes figures directory if it doesnt already exist
+    if not os.path.exists(figures_directory):
+        os.makedirs(figures_directory)
+
+    # creates the figure file
+    figures_path = os.path.join(figures_directory, f'{title}_plot.png')
+
+    # saves the plot to the figures file
+    fig.savefig(figures_path, bbox_inches='tight', facecolor=fig.get_facecolor(), dpi=180)
+
+    return fig, ax, view
 
 def img_from_fig(fig):
     buf = io.BytesIO()
@@ -86,7 +108,7 @@ def img_from_fig(fig):
 
     return img
 
-def capture_gif(fig, ax, start_view):
+def capture_gif(title, fig, ax, start_view):
     '''
     using a generated figure, pauses on the angle that view the asterism/constellation.
     moves to 30, 0
@@ -157,6 +179,16 @@ def capture_gif(fig, ax, start_view):
         img = img_from_fig(fig)
         frames.append(img)
 
+    # path to animations directory
+    animations_directory = os.path.join('..', 'animations')
+
+    # create directory if it does not exist
+    if not os.path.exists(animations_directory):
+        os.makedirs(animations_directory)
+
+    # full file path
+    gif_path = os.path.join(animations_directory, f'rotating_{title}.gif')
+
     # save frames as a gif with infinite loop
-    imageio.mimsave('rotating_plot.gif', frames, fps=fps, loop=0)
+    imageio.mimsave(gif_path, frames, fps=fps, loop=0)
 

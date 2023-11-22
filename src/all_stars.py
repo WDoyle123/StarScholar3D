@@ -43,6 +43,10 @@ def all_stars():
         y_coordinates_array.append(y_coordinate)
         z_coordinates_array.append(z_coordinate)
         rgb_colors.append(rgb) 
+    
+    title='all_stars'
 
     # plots 3d scatter diagram 
-    plot_3d_scatter(x_coordinates_array, y_coordinates_array, z_coordinates_array, rgb_colors, title='All Stars')
+    fig, ax, view = plot_3d_scatter(x_coordinates_array, y_coordinates_array, z_coordinates_array, rgb_colors, title=title)
+
+    return title, fig, ax, view 
