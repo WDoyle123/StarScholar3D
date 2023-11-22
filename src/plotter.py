@@ -47,14 +47,20 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
         for i in range(len(x)):
             ax.text(x[i], y[i], z[i], star_names[i], color='white', fontsize=9)
 
-    # connect stars in a 'closed loop'
-    star_coords = {'x': x, 'y': y, 'z': z}
 
-    # for big dipper
-    draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
+    if star_names is not None:
+    
+        # connect stars in a 'closed loop'
+        star_coords = {'x': x, 'y': y, 'z': z}
 
-    # for little dipper
-    draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
+        # for big dipper
+        draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
+
+        # for little dipper
+        draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
+
+        # for summer triangle
+        draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
 
     # draw lines connecting the stars in the Big Dipper
     ax.plot(x, y, z, color='white', linewidth=1)
