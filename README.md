@@ -17,14 +17,11 @@ Please note that StarScholar3D is currently a work in progress. Features are bei
 ## Visualisations
 Below are some visualisations created using StarScholar3D:
 
-![3D star map](fig_1.png)
+![3D star map](animations/all_stars.gif)
 *3D representation of the star map.*
 
-![Big Dipper](big_dipper.png)
+![Big Dipper](animations/big_dipper.gif)
 *Visualisation of the Big Dipper asterism.*
-
-![Big Dipper Rotating](big_dipper.gif)
-*Rotating Big Dipper asterism (click for rotation).*
 
 ## License
 see the [LICENSE](LICENSE) file for details.
