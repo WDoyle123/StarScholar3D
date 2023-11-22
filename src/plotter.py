@@ -12,6 +12,17 @@ def star_size(x):
     else:
         return 15
 
+def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='white', linewidth=1):
+    if star1 in star_names and star2 in star_names:
+        star_names_list = list(star_names)
+        index_star1 = star_names_list.index(star1)
+        index_star2 = star_names_list.index(star2)
+
+        ax.plot([star_coords['x'][index_star1], star_coords['x'][index_star2]],
+                [star_coords['y'][index_star1], star_coords['y'][index_star2]],
+                [star_coords['z'][index_star1], star_coords['z'][index_star2]],
+                color=color, linewidth=linewidth)
+
 def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
     '''
     Creates a 3D plot using Cartesian coordinates with a black background,
@@ -36,20 +47,17 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
         for i in range(len(x)):
             ax.text(x[i], y[i], z[i], star_names[i], color='white', fontsize=9)
 
-        # joins the two stars by a line, completing the drawing of the asterism
-        if 'Phecda' in star_names and 'Megrez' in star_names:
-            star_names_list = list(star_names)
-            index_phecda = star_names_list.index('Phecda')
-            index_megrez = star_names_list.index('Megrez')
-            
-            # plots line
-            ax.plot([x[index_phecda], x[index_megrez]],
-                    [y[index_phecda], y[index_megrez]],
-                    [z[index_phecda], z[index_megrez]],
-                    color='white', linewidth=1)
+    # connect stars in a 'closed loop'
+    star_coords = {'x': x, 'y': y, 'z': z}
 
-        # draw lines connecting the stars in the Big Dipper
-        ax.plot(x, y, z, color='white', linewidth=1)
+    # for big dipper
+    draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
+
+    # for little dipper
+    draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
+
+    # draw lines connecting the stars in the Big Dipper
+    ax.plot(x, y, z, color='white', linewidth=1)
 
     # set labels with grey color
     ax.set_xlabel('X Coordinate', color='grey')
@@ -94,7 +102,7 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
 
     # saves the plot to the figures file
     fig.savefig(figures_path, bbox_inches='tight', facecolor=fig.get_facecolor(), dpi=180)
-
+    
     return fig, ax, view
 
 def img_from_fig(fig):
@@ -110,6 +118,10 @@ def img_from_fig(fig):
 
 def capture_gif(title, fig, ax, start_view):
     '''
+    ######################################
+    VERY RAM INTENSIVE MIGHT CRASH YOUR PC
+    ######################################
+
     using a generated figure, pauses on the angle that view the asterism/constellation.
     moves to 30, 0
     rotates 360 
@@ -117,7 +129,7 @@ def capture_gif(title, fig, ax, start_view):
     saves as gif
     '''
     # frames per second
-    fps = 20
+    fps = 15
     
     # initial gif pauses on asterism/constellation
     pause_duration_sec = 2
@@ -142,7 +154,7 @@ def capture_gif(title, fig, ax, start_view):
 
     # find the amount of steps needed for transition
     steps_elev = abs(end_elev - start_elev)
-    for step in range(steps_elev + 1):
+    for step in range(steps_elev + 2):
 
         # example halfway: elev = = -42 + (30 - (-42)) * 36 / 72 = -6
         elev = start_elev + (end_elev - start_elev) * step / steps_elev
@@ -153,27 +165,27 @@ def capture_gif(title, fig, ax, start_view):
     # transition to azimuth 0 degrees
     end_azim = 0
     steps = abs(end_azim - start_azim)
-    for step in range(steps + 1):
+    for step in range(steps + 2):
         azim = start_azim + (end_azim - start_azim) * step / steps
         ax.view_init(elev=end_elev, azim=azim)
         img = img_from_fig(fig)
         frames.append(img)
 
     # rotate 360 degrees
-    for angle in range(0, 360, 1):
+    for angle in range(0, 360, 2):
         ax.view_init(elev=30, azim=angle)
         img = img_from_fig(fig)
         frames.append(img)
 
     # transition to start_azim
-    for step in range(steps + 1):
+    for step in range(steps + 2):
         azim = end_azim + (start_azim - end_azim) * step / steps
         ax.view_init(elev=end_elev, azim=azim)
         img = img_from_fig(fig)
         frames.append(img)
 
     # transistion to start_elev
-    for step in range(steps_elev + 1):
+    for step in range(steps_elev + 2):
         elev = end_elev + (start_elev - end_elev) * step / steps_elev
         ax.view_init(elev=elev, azim=start_azim)
         img = img_from_fig(fig)

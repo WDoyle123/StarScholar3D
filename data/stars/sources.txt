@@ -1,0 +1,2 @@
+RA, Dec, parallax: SIMBAD and Gaia (cross referenced)
+everything else: Yale Bright Star Catalogue
