@@ -21,8 +21,6 @@ def ursa_major():
 
     # gets stars in the ursa major constellation
     df = df[df['alt_name'].str.contains('UMa')]
-    print(df)
-    print(len(df))
     
     # apply calculations such as getting coordinates and color 
     df = star_data_calculator(df)
@@ -30,6 +28,6 @@ def ursa_major():
     title = 'ursa_major'
 
     # plots ursa major constellation
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, title=title)
+    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, title=title, lines=False)
 
     return title, fig, ax, view

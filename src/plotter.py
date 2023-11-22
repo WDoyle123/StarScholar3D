@@ -23,7 +23,7 @@ def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='wh
                 [star_coords['z'][index_star1], star_coords['z'][index_star2]],
                 color=color, linewidth=linewidth)
 
-def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
+def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True):
     '''
     Creates a 3D plot using Cartesian coordinates with a black background,
     white points, grey axes, and black grid panes.
@@ -48,22 +48,23 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None):
             ax.text(x[i], y[i], z[i], star_names[i], color='white', fontsize=9)
 
 
-    if star_names is not None:
+    # draw lines connecting the stars
+    if lines == True:
+        ax.plot(x, y, z, color='white', linewidth=1)
+        
+        if star_names is not None:
     
-        # connect stars in a 'closed loop'
-        star_coords = {'x': x, 'y': y, 'z': z}
+            # connect stars in a 'closed loop'
+            star_coords = {'x': x, 'y': y, 'z': z}
 
-        # for big dipper
-        draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
+            # for big dipper
+            draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
+    
+            # for little dipper
+            draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
 
-        # for little dipper
-        draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
-
-        # for summer triangle
-        draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
-
-    # draw lines connecting the stars in the Big Dipper
-    ax.plot(x, y, z, color='white', linewidth=1)
+            # for summer triangle
+            draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
 
     # set labels with grey color
     ax.set_xlabel('X Coordinate', color='grey')
