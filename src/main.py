@@ -1,4 +1,5 @@
 from asterisms import big_dipper, little_dipper, summer_triangle
+from constellations import ursa_major
 from plotter import capture_gif
 
 # call functions to plot stars in the big dipper asterism
@@ -13,3 +14,5 @@ title, fig, ax, view = little_dipper()
 
 title, fig, ax, view = summer_triangle()
 #capture_gif(title, fig, ax, view)
+
+title, fig, ax, view = ursa_major()

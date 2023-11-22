@@ -3,13 +3,22 @@ import pandas as pd
 
 def star_data_calculator(df, ordered_star_names=None):
 
+    # avoid settingwithcopywarning from pandas
+    df = df.copy()    
+
     if ordered_star_names is not None:
         # create order to the stars, this allows for connecting the stars using a line plot in plotter.py
         df['common_name'] = pd.Categorical(df['common_name'], categories=ordered_star_names, ordered=True)
         df = df.sort_values(by='common_name')
+    
+        # error corrector
+        df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
 
     # remove any NaN and zero values found in parallax column
     df = df[(df['parallax'].notna() & df.parallax != 0)]
+    
+    # Replace NaN values in 'bv_color' with 0.5
+    df['bv_color'] = df['bv_color'].fillna(0.5)
 
     # turns degrees to radians (np.sin and np.cos already do this but this will update the df)
     df['dec'] = df.apply(lambda row: degrees_to_radians(row['dec']), axis=1)
@@ -18,16 +27,13 @@ def star_data_calculator(df, ordered_star_names=None):
     # Calculate x, y, z coordinates and RGB colors, and add them to the df
     df['distance'] = df.apply(lambda row: calculate_distance(row['parallax']), axis=1)
 
-    # seems to be an error in data_j2000.csv with the parallax of Alioth
-    df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
-
     # create x y z coordinates in the df using distance, declination and right acension
     df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
     df['y_coordinate'] = df.apply(lambda row: calculate_y_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
     df['z_coordinate'] = df.apply(lambda row: calculate_z_coordinate((row['distance']), row['dec']), axis=1)
 
     # creates a color variable to each star (approximatly)
-    df['rgb_color'] = df['bv_color'].apply(bv_color_to_rgb)
+    df['rgb_color'] = df['bv_color'].apply(lambda row: bv_color_to_rgb(row))
 
     return df
 
