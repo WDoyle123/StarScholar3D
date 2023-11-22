@@ -73,8 +73,11 @@ def big_dipper():
 
     # creates a color variable to each star (approximatly) 
     df['rgb_color'] = df['bv_color'].apply(bv_color_to_rgb)
+    
+    # viewing angle for gif and png
+    view = (-43, -2)
 
     # plots the Big Dipper asterism
-    fig, ax = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title='Big Dipper', view=(-43, -2))
+    fig, ax = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title='Big Dipper', view=view)
 
-    return fig, ax
+    return fig, ax, view

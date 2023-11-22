@@ -6,5 +6,5 @@ from plotter import capture_gif
 #all_stars()
 
 # call functions to plot stars in the big dipper asterism
-fig, ax = big_dipper()
-capture_gif(fig, ax)
+fig, ax, view = big_dipper()
+capture_gif(fig, ax, view)

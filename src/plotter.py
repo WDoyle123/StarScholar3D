@@ -86,16 +86,77 @@ def img_from_fig(fig):
 
     return img
 
-def capture_gif(fig, ax):
+def capture_gif(fig, ax, start_view):
+    '''
+    using a generated figure, pauses on the angle that view the asterism/constellation.
+    moves to 30, 0
+    rotates 360 
+    moves back to original viewing angle
+    saves as gif
+    '''
+    # frames per second
     fps = 20
-    pause_duration_sec = 5
-    pause_frames = pause_duration_sec * fps
+    
+    # initial gif pauses on asterism/constellation
+    pause_duration_sec = 2
+
+    # gets desired amount of frames for pause duration
+    pause_frames = int(pause_duration_sec * fps)
+
+    # the view angle of the asterism/constellation
     initial_img = img_from_fig(fig)
-    initial_img_pause = initial_img * pause_frames
-    frames = []
-    frames.append(initial_img_pause)
-    for angle in range(0, 360, 1):
-        ax.view_init(30, angle)
+
+    # put pause frames into frame array which stores all frames for gif
+    frames = [initial_img for _ in range(pause_frames)]
+
+    # set the initial view
+    ax.view_init(elev=start_view[0], azim=start_view[1])
+    img = img_from_fig(fig)
+    frames.append(img)
+
+    # transition to elevation 30 degrees
+    start_elev, start_azim = start_view
+    end_elev = 30
+
+    # find the amount of steps needed for transition
+    steps_elev = abs(end_elev - start_elev)
+    for step in range(steps_elev + 1):
+
+        # example halfway: elev = = -42 + (30 - (-42)) * 36 / 72 = -6
+        elev = start_elev + (end_elev - start_elev) * step / steps_elev
+        ax.view_init(elev=elev, azim=start_azim)
         img = img_from_fig(fig)
         frames.append(img)
-    imageio.mimsave('plot_new.gif', frames, fps=fps)
+
+    # transition to azimuth 0 degrees
+    end_azim = 0
+    steps = abs(end_azim - start_azim)
+    for step in range(steps + 1):
+        azim = start_azim + (end_azim - start_azim) * step / steps
+        ax.view_init(elev=end_elev, azim=azim)
+        img = img_from_fig(fig)
+        frames.append(img)
+
+    # rotate 360 degrees
+    for angle in range(0, 360, 1):
+        ax.view_init(elev=30, azim=angle)
+        img = img_from_fig(fig)
+        frames.append(img)
+
+    # transition to start_azim
+    for step in range(steps + 1):
+        azim = end_azim + (start_azim - end_azim) * step / steps
+        ax.view_init(elev=end_elev, azim=azim)
+        img = img_from_fig(fig)
+        frames.append(img)
+
+    # transistion to start_elev
+    for step in range(steps_elev + 1):
+        elev = end_elev + (start_elev - end_elev) * step / steps_elev
+        ax.view_init(elev=elev, azim=start_azim)
+        img = img_from_fig(fig)
+        frames.append(img)
+
+    # save frames as a gif with infinite loop
+    imageio.mimsave('rotating_plot.gif', frames, fps=fps, loop=0)
+
