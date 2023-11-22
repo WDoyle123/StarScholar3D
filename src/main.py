@@ -17,5 +17,6 @@ title, fig, ax, view = summer_triangle()
 print(f'{title}')
 
 title, fig, ax, view = ursa_major()
-capture_gif(title, fig, ax, view)
+#capture_gif(title, fig, ax, view)
 print(f'{title}')
+
