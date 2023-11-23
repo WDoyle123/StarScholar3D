@@ -39,3 +39,19 @@ def check_and_convert_types(df):
 
     return df
 
+def get_data_frame(file):
+
+    # current directory
+    current_dir = os.path.dirname('src')
+
+    # directory of data relative to current directory
+    data_file_path = os.path.join(current_dir, '..', 'data', file)
+
+    # load data from csv to pandas dataframe
+    df = load_data(data_file_path)
+
+    # check if types are correct and convert if otherwise
+    df = check_and_convert_types(df)
+
+    return df
+
