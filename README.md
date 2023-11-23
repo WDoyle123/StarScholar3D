@@ -8,6 +8,7 @@ StarScholar3D is an innovative project that leverages the extensive data from th
 - **3D Visualisation**: Plots stars, constellations, and asterisms in an interactive 3D space.
 - **Coordinate Transformation**: Converts equatorial coordinates to cartesian coordinates for accurate 3D plotting.
 - **Interactive Experience**: Enables users to explore and interact with the 3D star map.
+- **GIF Capture**: Enables the capturing of GIFs of the data visualisation.
 
 ## Work in Progress (WIP)
 Please note that StarScholar3D is currently a work in progress. Features are being actively developed and refined. Contributions, suggestions, and feedback are highly welcomed!
