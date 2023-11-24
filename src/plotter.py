@@ -23,7 +23,7 @@ def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='wh
                 [star_coords['z'][index_star1], star_coords['z'][index_star2]],
                 color=color, linewidth=linewidth)
 
-def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True):
+def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True, grid_lines=True):
     '''
     Creates a 3D plot using Cartesian coordinates with a black background,
     white points, grey axes, and black grid panes.
@@ -66,21 +66,45 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
             # for summer triangle
             draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
 
-    # set labels with grey color
-    ax.set_xlabel('X Coordinate', color='grey')
-    ax.set_ylabel('Y Coordinate', color='grey')
-    ax.set_zlabel('Z Coordinate', color='grey')
+    # handling grid lines and axis labels
+    if not grid_lines:
+        # hide axis labels
+        ax.set_xlabel('')
+        ax.set_ylabel('')
+        ax.set_zlabel('')
+
+        # hide tick labels
+        for axis in [ax.xaxis, ax.yaxis, ax.zaxis]:
+            axis.set_ticklabels([])
+    
+        # hide grid lines
+        ax.grid(False)
+
+        # jide tick labels
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_zticks([])
+
+        # hide the axes themselves
+        ax.xaxis.set_visible(False)
+        ax.yaxis.set_visible(False)
+        ax.zaxis.set_visible(False)
+    else:
+        # set labels with grey color
+        ax.set_xlabel('X Coordinate', color='grey')
+        ax.set_ylabel('Y Coordinate', color='grey')
+        ax.set_zlabel('Z Coordinate', color='grey')
+
+    # set tick colors to grey
+    ax.tick_params(axis='x', colors='grey')
+    ax.tick_params(axis='y', colors='grey')
+    ax.tick_params(axis='z', colors='grey')
 
     # use title from function call or default
     if title is not None:
         ax.set_title(title, color='white',fontsize=18, pad=20)
     else:
         ax.set_title('3D Star Map', color='white',fontsize=18, pad=20)
-
-    # set tick colors to grey
-    ax.tick_params(axis='x', colors='grey')
-    ax.tick_params(axis='y', colors='grey')
-    ax.tick_params(axis='z', colors='grey')
 
     # set pane colors to black (make them blend with the background)
     ax.xaxis.pane.fill = False
