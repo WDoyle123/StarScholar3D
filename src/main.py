@@ -1,29 +1,36 @@
-from asterisms import big_dipper, little_dipper, summer_triangle
+from asterisms import big_dipper, little_dipper, summer_triangle, orions_belt
 from constellations import ursa_major, ursa_minor
 from plotter import capture_gif
 
 from matplotlib import pyplot as plt
 
-# call functions to plot stars in the big dipper asterism
-title, fig, ax, view = big_dipper()
-print(f'{title}')
-#capture_gif(title, fig, ax, view)
+# flags for toggling gif capture and plot display
+capture_gif_flag = True
+show_plot_flag = True
 
-# call function to plot stars in the little dipper asterism
-title, fig, ax, view = little_dipper()
-#capture_gif(title, fig, ax, view)
-print(f'{title}')
+# flags for processing asterisms and constellations
+process_asterisms = True
+process_constellations = True
 
-title, fig, ax, view = summer_triangle()
-#capture_gif(title, fig, ax, view)
-print(f'{title}')
+# lists of functions for asterisms and constellations
+asterism_functions = [big_dipper, little_dipper, summer_triangle, orions_belt]
+constellation_functions = [ursa_major, ursa_minor]
 
-title, fig, ax, view = ursa_major()
-#capture_gif(title, fig, ax, view)
-print(f'{title}')
+# combine lists based on flags
+celestial_objects = []
+if process_asterisms:
+    celestial_objects.extend(asterism_functions)
+if process_constellations:
+    celestial_objects.extend(constellation_functions)
 
-title, fig, ax, view = ursa_minor()
-#capture_gif(title, fig, ax, view)
-print(f'{title}')
-plt.show()
+# processing loop
+for celestial_object in celestial_objects:
+    title, fig, ax, view = celestial_object()
+    print(f'{title}')
 
+    if capture_gif_flag:
+        capture_gif(title, fig, ax, view)
+
+    if show_plot_flag:
+            plt.show()
+            plt.close(fig)

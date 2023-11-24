@@ -6,14 +6,6 @@ def star_data_calculator(df, ordered_star_names=None):
     # avoid settingwithcopywarning from pandas
     df = df.copy()    
 
-    if ordered_star_names is not None:
-        # create order to the stars, this allows for connecting the stars using a line plot in plotter.py
-        df['common_name'] = pd.Categorical(df['common_name'], categories=ordered_star_names, ordered=True)
-        df = df.sort_values(by='common_name')
-    
-        # error corrector
-        df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
-
     # remove any NaN and zero values found in parallax column
     df = df[(df['parallax'].notna() & df.parallax != 0)]
     
@@ -26,6 +18,13 @@ def star_data_calculator(df, ordered_star_names=None):
 
     # Calculate x, y, z coordinates and RGB colors, and add them to the df
     df['distance'] = df.apply(lambda row: calculate_distance(row['parallax']), axis=1)
+
+    if ordered_star_names is not None:
+        # create order to the stars, this allows for connecting the stars using a line plot in plotter.py
+        df['common_name'] = pd.Categorical(df['common_name'], categories=ordered_star_names, ordered=True)
+        df = df.sort_values(by='common_name')
+
+        df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
 
     # create x y z coordinates in the df using distance, declination and right acension
     df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec'], row['ra']), axis=1)

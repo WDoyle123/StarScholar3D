@@ -168,7 +168,8 @@ def capture_gif(title, fig, ax, start_view):
         ax.view_init(elev=elev, azim=start_azim)
         img = img_from_fig(fig)
         frames.append(img)
-
+    
+    '''
     # transition to azimuth 0 degrees
     end_azim = 0
     steps = abs(end_azim - start_azim)
@@ -177,19 +178,22 @@ def capture_gif(title, fig, ax, start_view):
         ax.view_init(elev=end_elev, azim=azim)
         img = img_from_fig(fig)
         frames.append(img)
-
+    '''
+    
     # rotate 360 degrees
-    for angle in range(0, 360, 2):
+    for angle in range(start_azim, start_azim +  360, 2):
         ax.view_init(elev=30, azim=angle)
         img = img_from_fig(fig)
         frames.append(img)
 
+    '''
     # transition to start_azim
     for step in range(steps + 2):
         azim = end_azim + (start_azim - end_azim) * step / steps
         ax.view_init(elev=end_elev, azim=azim)
         img = img_from_fig(fig)
         frames.append(img)
+    '''
 
     # transistion to start_elev
     for step in range(steps_elev + 2):

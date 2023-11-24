@@ -113,3 +113,26 @@ def summer_triangle():
     fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
 
     return title, fig, ax, view
+
+def orions_belt():
+
+    # for figure and gif
+    title = 'orions_belt'
+    view = (28, -135)
+ 
+    orions_belt_stars = ['50Zet Ori', '28Eta Ori', '34Del Ori']
+    ordered_star_names = ['Alnitak', 'Alnilam', 'Mintaka']
+
+    df = get_data_frame('data_j2000.csv')
+
+    df = df[df['alt_name'].isin(orions_belt_stars)]
+    
+    name_mapping = dict(zip(orions_belt_stars, ordered_star_names))
+
+    df['common_name'] = df['alt_name'].map(name_mapping)
+
+    df = star_data_calculator(df, ordered_star_names)
+
+    fig, ax, view, = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+
+    return title, fig, ax, view
