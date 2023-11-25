@@ -8,7 +8,7 @@ import os
 
 def star_size(x):
     if len(x) < 10:
-        return 30
+        return 100
     else:
         return 15
 
@@ -23,11 +23,28 @@ def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='wh
                 [star_coords['z'][index_star1], star_coords['z'][index_star2]],
                 color=color, linewidth=linewidth)
 
+def combine_labels(x, y, labels, threshold=0.05):
+    n = len(x)
+    combined_labels = labels.copy()
+    combined = set()  # to keep track of indices that have been combined
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            if i not in combined and j not in combined:
+                # calculate the distance between points i and j
+                distance = np.sqrt((x[i] - x[j])**2 + (y[i] - y[j])**2)
+
+                if distance < threshold:
+                    # combine labels and assign to the first point
+                    combined_labels[i] = f'{labels[i]}, {labels[j]}'
+                    combined_labels[j] = ''  # empty label for the other point
+                    combined.add(i)
+                    combined.add(j)
+
+    return combined_labels
+
 def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True, grid_lines=True):
-    '''
-    Creates a 3D plot using Cartesian coordinates with a black background,
-    white points, grey axes, and black grid panes.
-    '''
+ 
     # create figure
     fig = plt.figure(figsize=(10, 8))
     fig.set_facecolor('black')
@@ -44,9 +61,9 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
 
     # add annotations if star names are provided
     if star_names is not None:
+        combined_star_names = combine_labels(x, y, list(star_names), threshold=1)
         for i in range(len(x)):
-            ax.text(x[i], y[i], z[i], star_names[i], color='white', fontsize=9)
-
+            ax.text(x[i], y[i], z[i], combined_star_names[i], color='white', fontsize=20)
 
     # draw lines connecting the stars
     if lines == True:

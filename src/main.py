@@ -14,10 +14,10 @@ process_asterisms = True
 process_constellations = False
 process_all_stars = False
 
-# lists of functions for asterisms and constellations
-asterism_functions = [big_dipper, little_dipper, summer_triangle, orions_belt]
+# lists of functions for asterisms and constellations#
+#asterism_functions = [big_dipper, little_dipper, summer_triangle, orions_belt]
 
-#asterism_functions = [big_dipper] # for testing
+asterism_functions = [big_dipper] # for testing
 
 constellation_functions = [ursa_major, ursa_minor]
 
