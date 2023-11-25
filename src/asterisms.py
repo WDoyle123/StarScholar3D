@@ -51,7 +51,7 @@ def big_dipper():
     df = star_data_calculator(df, ordered_star_names)
 
     # plots the Big Dipper asterism
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view, grid_lines=False)
+    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
 
     return title, fig, ax, view
 
@@ -133,6 +133,6 @@ def orions_belt():
 
     df = star_data_calculator(df, ordered_star_names)
 
-    fig, ax, view, = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+    fig, ax, view, = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view, label_combining=False)
 
     return title, fig, ax, view

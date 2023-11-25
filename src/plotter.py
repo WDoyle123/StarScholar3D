@@ -5,10 +5,11 @@ import io
 import cv2
 import numpy as np
 import os
+from PIL import Image
 
 def star_size(x):
     if len(x) < 10:
-        return 100
+        return 50
     else:
         return 15
 
@@ -43,7 +44,7 @@ def combine_labels(x, y, labels, threshold=0.05):
 
     return combined_labels
 
-def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True, grid_lines=True):
+def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True, no_grid_lines=True, label_combining=True):
  
     # create figure
     fig = plt.figure(figsize=(10, 8))
@@ -61,9 +62,14 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
 
     # add annotations if star names are provided
     if star_names is not None:
-        combined_star_names = combine_labels(x, y, list(star_names), threshold=1)
-        for i in range(len(x)):
-            ax.text(x[i], y[i], z[i], combined_star_names[i], color='white', fontsize=20)
+        star_names_fontsize = 12
+        if label_combining:
+            combined_star_names = combine_labels(x, y, list(star_names), threshold=1)
+            for i in range(len(x)):
+                ax.text(x[i], y[i], z[i], combined_star_names[i], color='white', fontsize=star_names_fontsize)
+        else:
+            for i in range(len(x)):
+                ax.text(x[i], y[i], z[i], star_names[i], color='white', fontsize=star_names_fontsize)
 
     # draw lines connecting the stars
     if lines == True:
@@ -84,7 +90,7 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
             draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
 
     # handling grid lines and axis labels
-    if not grid_lines:
+    if no_grid_lines:
         # hide axis labels
         ax.set_xlabel('')
         ax.set_ylabel('')
@@ -155,7 +161,7 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
 
 def img_from_fig(fig):
     buf = io.BytesIO()
-    fig.savefig(buf, format='png', dpi=180)
+    fig.savefig(buf, format='png', dpi=90)
     buf.seek(0)
     img_arr = np.frombuffer(buf.getvalue(), dtype=np.uint8)
     buf.close()
@@ -177,7 +183,7 @@ def capture_gif(title, fig, ax, start_view):
     saves as gif
     '''
     # frames per second
-    fps = 15
+    fps = 30
     
     # initial gif pauses on asterism/constellation
     pause_duration_sec = 2
@@ -202,7 +208,7 @@ def capture_gif(title, fig, ax, start_view):
 
     # find the amount of steps needed for transition
     steps_elev = abs(end_elev - start_elev)
-    for step in range(steps_elev + 2):
+    for step in range(steps_elev + 1):
 
         # example halfway: elev = = -42 + (30 - (-42)) * 36 / 72 = -6
         elev = start_elev + (end_elev - start_elev) * step / steps_elev
@@ -222,7 +228,7 @@ def capture_gif(title, fig, ax, start_view):
     '''
     
     # rotate 360 degrees
-    for angle in range(start_azim, start_azim +  360, 2):
+    for angle in range(start_azim, start_azim +  360, 1):
         ax.view_init(elev=30, azim=angle)
         img = img_from_fig(fig)
         frames.append(img)
@@ -237,7 +243,7 @@ def capture_gif(title, fig, ax, start_view):
     '''
 
     # transistion to start_elev
-    for step in range(steps_elev + 2):
+    for step in range(steps_elev + 1):
         elev = end_elev + (start_elev - end_elev) * step / steps_elev
         ax.view_init(elev=elev, azim=start_azim)
         img = img_from_fig(fig)
@@ -255,4 +261,3 @@ def capture_gif(title, fig, ax, start_view):
 
     # save frames as a gif with infinite loop
     imageio.mimsave(gif_path, frames, fps=fps, loop=0)
-
