@@ -6,13 +6,13 @@ from plotter import capture_gif
 from matplotlib import pyplot as plt
 
 # flags for toggling gif capture and plot display
-capture_gif_flag = True
-show_plot_flag = False
+capture_gif_flag = False
+show_plot_flag = True
 
 # flags for processing asterisms and constellations
 process_asterisms = True
 process_constellations = True
-process_all_stars = True
+process_all_stars = False
 
 # lists of functions for asterisms and constellations#
 asterism_functions = [big_dipper, little_dipper, summer_triangle, orions_belt]

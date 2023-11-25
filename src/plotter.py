@@ -103,7 +103,7 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
         # hide grid lines
         ax.grid(False)
 
-        # jide tick labels
+        # hide tick labels
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_zticks([])
@@ -171,17 +171,11 @@ def img_from_fig(fig):
     return img
 
 def capture_gif(title, fig, ax, start_view):
-    '''
-    ######################################
-    VERY RAM INTENSIVE MIGHT CRASH YOUR PC
-    ######################################
 
-    using a generated figure, pauses on the angle that view the asterism/constellation.
-    moves to 30, 0
-    rotates 360 
-    moves back to original viewing angle
-    saves as gif
-    '''
+    #########################################
+    # RAM INTENSIVE MIGHT CRASH YOUR TERMINAL
+    #########################################
+
     # frames per second
     fps = 30
     
