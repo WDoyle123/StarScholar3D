@@ -119,20 +119,58 @@ def orions_belt():
     # for figure and gif
     title = 'orions_belt'
     view = (28, -135)
- 
+
+    # Orion's Belt stars in Orion, alternative names and common names respectively
     orions_belt_stars = ['50Zet Ori', '28Eta Ori', '34Del Ori']
     ordered_star_names = ['Alnitak', 'Alnilam', 'Mintaka']
 
+    # load data from csv
     df = get_data_frame('data_j2000.csv')
 
+    # find Orion's Belt stars in the df
     df = df[df['alt_name'].isin(orions_belt_stars)]
-    
+
+    # map alternative names to common names
     name_mapping = dict(zip(orions_belt_stars, ordered_star_names))
 
+    # apply mapping
     df['common_name'] = df['alt_name'].map(name_mapping)
 
+    # apply calculations such as getting coordinates and color 
     df = star_data_calculator(df, ordered_star_names)
 
-    fig, ax, view, = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view, label_combining=False)
+    # plots the Orion's Belt asterism
+    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
 
     return title, fig, ax, view
+
+def cassiopeia_w():
+
+    # for figure and gif
+    title = 'cassiopeia_w'
+    view = (-27, -165)
+
+    # Cassiopeia W stars, alternative names and common names respectively
+    cassiopeia_w_stars = ['45Eps Cas', '37Del Cas', '27Gam Cas', '18Alp Cas', '11Bet Cas']
+    ordered_star_names = ['Segin', 'Ruchbah', 'Gam Cas', 'Schedar', 'Caph']
+
+    # load data from csv
+    df = get_data_frame('data_j2000.csv')
+
+    # find Cassiopeia W stars in the df
+    df = df[df['alt_name'].isin(cassiopeia_w_stars)]
+
+    # map alternative names to common names
+    name_mapping = dict(zip(cassiopeia_w_stars, ordered_star_names))
+
+    # apply mapping
+    df['common_name'] = df['alt_name'].map(name_mapping)
+
+    # apply calculations such as getting coordinates and color 
+    df = star_data_calculator(df, ordered_star_names)
+
+    # plots the Cassiopeia W asterism
+    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+
+    return title, fig, ax, view
+

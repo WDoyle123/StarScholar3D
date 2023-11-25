@@ -1,5 +1,5 @@
-from asterisms import big_dipper, little_dipper, summer_triangle, orions_belt
-from constellations import ursa_major, ursa_minor
+from asterisms import big_dipper, little_dipper, summer_triangle, orions_belt, cassiopeia_w
+from constellations import ursa_major, ursa_minor, cassiopeia
 from all_stars import all_stars
 from plotter import capture_gif
 
@@ -15,11 +15,11 @@ process_constellations = True
 process_all_stars = False
 
 # lists of functions for asterisms and constellations#
-asterism_functions = [big_dipper, little_dipper, summer_triangle, orions_belt]
+asterism_functions = [big_dipper, little_dipper, summer_triangle, orions_belt, cassiopeia_w]
 
-#asterism_functions = [big_dipper] # for testing
+#asterism_functions = [cassiopeia_w] # for testing
 
-constellation_functions = [ursa_major, ursa_minor]
+constellation_functions = [ursa_major, ursa_minor, cassiopeia]
 
 # combine lists based on flags
 celestial_objects = []
