@@ -16,7 +16,7 @@ def big_dipper():
 
     # Big Dipper stars in Ursa Major, alternative names and common names respectivly
     big_dipper_stars = ['79Zet UMa', '77Eps UMa', '69Del UMa', '64Gam UMa', '48Bet UMa', '50Alp UMa', '85Eta UMa']
-    ordered_star_names = ['Alkaid', 'Mizar', 'Alcor', 'Alioth', 'Megrez', 'Dubhe', 'Merak', 'Phecda']
+    ordered_star_names = ['Alkaid', 'Mizar', 'Alioth', 'Megrez', 'Dubhe', 'Merak', 'Phecda']
 
     # filter the df to include only the Big Dipper stars
     df = df[df['alt_name'].isin(big_dipper_stars)]
@@ -34,18 +34,6 @@ def big_dipper():
     
     # apply mapping
     df['common_name'] = df['alt_name'].map(name_mapping)
-
-    # manually adjust the entries for Mizar and Alcor since they share name in data_j2000.csv
-    mizar_coords = (200.9850, 54.9217)
-    alcor_coords = (200.9812, 54.9253)
-
-    for index, row in df.iterrows():
-        if row['alt_name'] == '79Zet UMa':
-            coords = (row['ra'], row['dec'])
-            if coords == mizar_coords:
-                df.at[index, 'common_name'] = 'Mizar'
-            elif coords == alcor_coords:
-                df.at[index, 'common_name'] = 'Alcor'
 
     # apply calculations such as getting coordinates and color 
     df = star_data_calculator(df, ordered_star_names)
