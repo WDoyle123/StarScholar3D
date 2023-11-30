@@ -17,6 +17,7 @@ Please note that StarScholar3D is currently a work in progress. Features are bei
 Below are some visualisations created using StarScholar3D:
 
 ![Big Dipper](/animations/asterisms/rotating_big_dipper.gif)
+
 *Visualisation of the Big Dipper asterism.*
 
 ## License
