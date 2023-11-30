@@ -143,7 +143,7 @@ def img_from_fig(fig):
 
     return img
 
-def capture_gif(title, fig, ax, start_view):
+def capture_gif(title, fig, ax, start_view, of_type):
 
     #########################################
     # RAM INTENSIVE MIGHT CRASH YOUR TERMINAL
@@ -183,31 +183,11 @@ def capture_gif(title, fig, ax, start_view):
         img = img_from_fig(fig)
         frames.append(img)
     
-    '''
-    # transition to azimuth 0 degrees
-    end_azim = 0
-    steps = abs(end_azim - start_azim)
-    for step in range(steps + 2):
-        azim = start_azim + (end_azim - start_azim) * step / steps
-        ax.view_init(elev=end_elev, azim=azim)
-        img = img_from_fig(fig)
-        frames.append(img)
-    '''
-    
     # rotate 360 degrees
     for angle in range(start_azim, start_azim +  360, 1):
         ax.view_init(elev=30, azim=angle)
         img = img_from_fig(fig)
         frames.append(img)
-
-    '''
-    # transition to start_azim
-    for step in range(steps + 2):
-        azim = end_azim + (start_azim - end_azim) * step / steps
-        ax.view_init(elev=end_elev, azim=azim)
-        img = img_from_fig(fig)
-        frames.append(img)
-    '''
 
     # transistion to start_elev
     for step in range(steps_elev + 1):
@@ -218,13 +198,23 @@ def capture_gif(title, fig, ax, start_view):
 
     # path to animations directory
     animations_directory = os.path.join('..', 'animations')
+    animations_constellations_directory = os.path.join(animations_directory, 'constellations')
+    animations_asterisms_directory = os.path.join(animations_directory, 'asterisms')
 
     # create directory if it does not exist
     if not os.path.exists(animations_directory):
         os.makedirs(animations_directory)
+    if not os.path.exists(animations_constellations_directory):
+        os.makedirs(animations_constellations_directory)
+    if not os.path.exists(animations_asterisms_directory):
+        os.makedirs(animations_asterisms_directory)
 
+    if of_type == 'constellation':
+        save_gif_to_directory = animations_constellations_directory
+    if of_type == 'asterism':
+        save_gif_to_directory = animations_asterisms_directory
     # full file path
-    gif_path = os.path.join(animations_directory, f'rotating_{title}.gif')
+    gif_path = os.path.join(save_gif_to_directory, f'rotating_{title}.gif')
 
     # save frames as a gif with infinite loop
     imageio.mimsave(gif_path, frames, fps=fps, loop=0)

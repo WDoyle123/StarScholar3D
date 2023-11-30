@@ -1,63 +1,66 @@
 import os
 import pandas as pd
 
-from data_handler import load_data, check_and_convert_types, get_data_frame
-from calculations import calculate_distance, calculate_x_coordinate, calculate_y_coordinate, calculate_z_coordinate, bv_color_to_rgb, degrees_to_radians, star_data_calculator
-from plotter import plot_3d_scatter
+from data_handler import get_data_frame, constellation_dictionary
+from calculations import star_data_calculator
+from plotter import plot_3d_scatter, capture_gif
+from helper import greek_letter
 
-def ursa_major():
-    
-    # naming figure and gif
-    title = 'ursa_major'
+from matplotlib import pyplot as plt
 
-    # get data from catalogue using j2000 coordinates
+def constellations(plot=False, gif=False):
+
+    # load data from the yale bright star catalogue using j2000 coordinates
     df = get_data_frame('data_j2000.csv')
 
-    # gets stars in the ursa major constellation
-    df = df[df['alt_name'].str.contains('UMa')]
-    
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df)
+    # constellation dictionary is a function that gets the alt_name and combines it with the commmon name
+    # alt_name = UMi, common_name = Ursa Major
+    constellation_names = constellation_dictionary(df)
+   
+    # get both name types from the dictionary
+    for alt_name, common_name in constellation_names.items():
 
-    # plots ursa major constellation
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, title=title, lines=False)
+        # convert to lower case and if common_name has a space change to underscore
+        unchanged_title = common_name
+        title = common_name.lower().replace(' ', '_')
 
-    return title, fig, ax, view
+        # creates a boolean mask if the data frame contains an alt_name. 
+        # False also for NaN
+        mask = df['alt_name'].str.contains(alt_name, na=False)
 
-def ursa_minor():
+        # apply boolean mask to the dataframe
+        df_filtered = df[mask]
 
-    # naming figure and gif
-    title = 'ursa_minor'
-    
-    # get data from catalogue using j2000 coordinates
-    df = get_data_frame('data_j2000.csv')
+        # Del and Tau are both Greek letters and short for Delphinus and Taurus repectivley 
+        # But stars are designated by greek letters such as Alp UMi - Polaris
+        # This function filters the df so that stars such as Tau UMi do not appear in Taurus constellation
+        if alt_name == 'Del' or alt_name == 'Tau':
+            df_filtered = greek_letter(df_filtered, alt_name)
 
-    # gets stars in the ursa minor constellation
-    df = df[df['alt_name'].str.contains('UMi')]
-    
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df)
+        # Calculate the coordinates and colour from right acension and declination aswell as bv colour 
+        df_filtered = star_data_calculator(df_filtered)
 
-    # plots ursa major constellation
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, title=title, lines=False)
+        # plot the 3D scatter plot 
+        fig, ax, view, = plot_3d_scatter( 
+                df_filtered.x_coordinate.values, \
+                df_filtered.y_coordinate.values, \
+                df_filtered.z_coordinate.values, \
+                df_filtered.rgb_color.values, \
+                title=title, \
+                lines=False) 
 
-    return title, fig, ax, view
+        # show plot if true
+        if plot:
+            plt.show()
+            plt.close(fig)
 
-def cassiopeia():
+        # create gif if true 
+        # WILL TAKE ABOUT 33 MINS FOR ALL CONSTELLATIONS
+        if gif:
+            print(f'Creating gif for: {unchanged_title}')
+            capture_gif(title, fig, ax, view, of_type='constellation')
+            plt.close()
 
-    # naming figure and gif
-    title = 'cassiopeia'
-
-    # get data from catalogue using j2000 coordinates
-    df = get_data_frame('data_j2000.csv')
-
-    # get stars in the cassiopeia constellation
-    df = df[df['alt_name'].str.contains('Cas')]
-
-    # apply calculations such as getting coordinates and color
-    df = star_data_calculator(df)
-
-    # plots cassiopeia constellation
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, title=title, lines=False)
-
-    return title, fig, ax, view
+    # plt close needed due to the generation of many graphs in the function
+    plt.close()
+    return None
