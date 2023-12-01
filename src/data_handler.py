@@ -36,9 +36,6 @@ def check_and_convert_types(df):
                     df[column] = df[column].astype(expected_type)
                 except ValueError as e:
                     print(f"Error converting {column}: {e}")
-        else:
-            print(f"Column {column} not found in DataFrame")
-
     return df
 
 def get_data_frame(file):
@@ -103,9 +100,18 @@ def constellation_dictionary(df):
 from calculations import star_data_calculator
 from helper import greek_letter
 
-def results_to_csv()
-    # Load the dataframe from a CSV file
+def results_to_csv():
+    # Load the dataframes from CSV files
     df = get_data_frame('data_j2000.csv')
+    df2 = get_data_frame('iau_star_names.csv')
+
+    # Join df and df2 on 'Designation' in df2 and 'name' in df
+    # Only include specific columns from df2
+    df = df.merge(df2[['Designation', 'IAU Name ', 'Origin', 'Etymology Note', 'Source']], 
+                  left_on='name', right_on='Designation', how='left')
+
+    df.drop(columns=['Designation'], inplace=True)
+    df.rename(columns={'IAU Name ' : 'IAU Name'}, inplace=True)
 
     # Get constellation names dictionary
     constellation_names = constellation_dictionary(df)
@@ -136,6 +142,7 @@ def results_to_csv()
 
     # Save the combined dataframe to CSV
     result_df.to_csv('../data/all_constellations_and_their_stars.csv', index=False)
+
 
 
 
