@@ -2,6 +2,7 @@ from asterisms import *
 from constellations import *
 from all_stars import all_stars
 from plotter import capture_gif
+from data_handler import results_to_csv
 
 from matplotlib import pyplot as plt
 
@@ -39,3 +40,6 @@ for celestial_object in celestial_objects:
     if show_plot_flag:
             plt.show()
             plt.close(fig)
+
+# get results in csv format
+#results_to_csv()

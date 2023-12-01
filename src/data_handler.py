@@ -103,7 +103,7 @@ def constellation_dictionary(df):
 from calculations import star_data_calculator
 from helper import greek_letter
 
-def func():
+def results_to_csv()
     # Load the dataframe from a CSV file
     df = get_data_frame('data_j2000.csv')
 
@@ -136,9 +136,6 @@ def func():
 
     # Save the combined dataframe to CSV
     result_df.to_csv('../data/all_constellations_and_their_stars.csv', index=False)
-
-# Example usage
-func()
 
 
 
