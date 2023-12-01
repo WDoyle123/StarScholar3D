@@ -24,5 +24,5 @@ Below are some visualisations created using StarScholar3D:
 see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
-- Yale Bright Star Catalogue
-
+- [Yale Bright Star Catalogue](https://heasarc.gsfc.nasa.gov/db-perl/W3Browse/w3table.pl?tablehead=name%3Dbsc5p&Action=More+Options)
+- [International Astronomical Union](https://www.iau.org/public/themes/naming_stars/)
