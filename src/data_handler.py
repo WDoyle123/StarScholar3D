@@ -100,3 +100,45 @@ def constellation_dictionary(df):
 
     return constellation_names
 
+from calculations import star_data_calculator
+from helper import greek_letter
+
+def func():
+    # Load the dataframe from a CSV file
+    df = get_data_frame('data_j2000.csv')
+
+    # Get constellation names dictionary
+    constellation_names = constellation_dictionary(df)
+
+    constellation_data_array = []
+
+    for alt_name, common_name in constellation_names.items():
+        # Filter dataframe for stars belonging to the current constellation
+        mask = df['alt_name'].str.contains(alt_name, na=False)
+        df_filtered = df[mask]
+
+        # Special processing for specific constellations
+        if alt_name in ['Del', 'Tau']:
+            df_filtered = greek_letter(df_filtered, alt_name)
+
+        # Calculate additional star data
+        df_filtered = star_data_calculator(df_filtered)
+
+        # Assign constellation names
+        df_filtered['constellation_alt_name'] = alt_name
+        df_filtered['constellation_common_name'] = common_name
+
+        # Append to the main list
+        constellation_data_array.append(df_filtered)
+
+    # Combine all constellation data into a single dataframe
+    result_df = pd.concat(constellation_data_array)
+
+    # Save the combined dataframe to CSV
+    result_df.to_csv('../data/all_constellations_and_their_stars.csv', index=False)
+
+# Example usage
+func()
+
+
+
