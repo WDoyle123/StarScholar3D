@@ -7,11 +7,11 @@ from data_handler import results_to_csv
 from matplotlib import pyplot as plt
 
 # flags for toggling gif capture and plot display
-capture_gif_flag = True
+capture_gif_flag = False
 show_plot_flag = False
 
 # flags for processing asterisms and constellations
-process_asterisms = True
+process_asterisms = False
 process_constellations = False
 process_all_stars = False
 
@@ -42,4 +42,4 @@ for celestial_object in celestial_objects:
             plt.close(fig)
 
 # get results in csv format
-#results_to_csv()
+results_to_csv()

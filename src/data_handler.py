@@ -111,7 +111,7 @@ def results_to_csv():
                   left_on='name', right_on='Designation', how='left')
 
     df.drop(columns=['Designation'], inplace=True)
-    df.rename(columns={'IAU Name ' : 'IAU Name'}, inplace=True)
+    df.rename(columns={'IAU Name ' : 'iau_name', 'Origin' : 'origin', 'Etymology Note' : 'note', 'Source' : 'source'}, inplace=True)
 
     # Get constellation names dictionary
     constellation_names = constellation_dictionary(df)

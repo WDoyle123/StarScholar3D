@@ -1,4 +1,4 @@
-name,alt_name,ra,dec,bv_color,parallax,IAU Name,Origin,Etymology Note,Source,distance,x_coordinate,y_coordinate,z_coordinate,rgb_color,constellation_alt_name,constellation_common_name
+name,alt_name,ra,dec,bv_color,parallax,iau_name,origin,note,source,distance,x_coordinate,y_coordinate,z_coordinate,rgb_color,constellation_alt_name,constellation_common_name
 HR 8280,Lam Oct,5.719902980378692,-1.4437223946156934,0.75,0.011,,,,,90.90909090909092,9.741179765173952,-6.151861648904974,-90.17608787784407,"(1.0, 1.0, 0.4201707176850106)",Oct,Octans
 HR 8254,Nu  Oct,5.678755097933674,-1.3507103081184118,1.0,0.053,,,,,18.867924528301888,3.3893224199427596,-2.3408706477747256,-18.412805167865002,"(1.0, 0.7767113611579258, 0)",Oct,Octans
 HR 9084,The Oct,0.006960373056953386,-1.345051950683446,1.27,0.017,,,,,58.8235294117647,13.16626422077408,0.09164359069381071,-57.331044821961825,"(1.0, 0.8447662613908664, 0)",Oct,Octans
