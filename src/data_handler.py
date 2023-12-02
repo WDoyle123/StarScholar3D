@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import regex as re
 
 def load_data(file_path):
     '''
@@ -54,7 +55,7 @@ def get_data_frame(file):
 
     return df
 
-def get_common_names():
+def get_constellation_dictionary():
     # get the current directory 
     current_dir = os.path.dirname('src')
 
@@ -65,45 +66,21 @@ def get_common_names():
     sys.path.append(os.path.dirname(file_path))
 
     # Import 'common_names' from 'constellation_names'
-    from constellation_names import common_names
+    from constellation_names import constellation_abbreviations
 
-    return common_names
-
-def extract_constellations(df):
-
-    data = df.alt_name
-    data.replace('nan', np.nan, inplace=True)
-    data.dropna(inplace=True)
-
-    # filter out rows where the string length is less than the threshold
-    filtered_data = data[data.str.len() >= 5]
-
-    # extract the last three characters as constellation names
-    filtered_data = filtered_data[filtered_data.str[-3:].str.isalpha()]
-
-    # extracting constellation names
-    constellations_array = filtered_data.str[-3:].unique()
-
-    return constellations_array
-
-def constellation_dictionary(df):
-
-    # get both the alternative names and common names 
-    alt_names = extract_constellations(df)
-    common_names = get_common_names()
-
-    # create a dictionary eg. UMi : Ursa Minor
-    constellation_names = dict(zip(alt_names, common_names))
-
-    return constellation_names
+    return constellation_abbreviations
 
 from calculations import star_data_calculator
 from helper import greek_letter
 
 def results_to_csv():
     # Load the dataframes from CSV files
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
     df2 = get_data_frame('iau_star_names.csv')
+
+    df.rename(columns={'hr' : 'name'}, inplace=True)
+
+    df['name'] = 'HR ' + df['name'].astype(str)
 
     # Join df and df2 on 'Designation' in df2 and 'name' in df
     # Only include specific columns from df2
@@ -114,11 +91,11 @@ def results_to_csv():
     df.rename(columns={'IAU Name ' : 'iau_name', 'Origin' : 'origin', 'Etymology Note' : 'note', 'Source' : 'source'}, inplace=True)
 
     # Get constellation names dictionary
-    constellation_names = constellation_dictionary(df)
+    constellation_names = get_constellation_dictionary()
 
     constellation_data_array = []
 
-    for alt_name, common_name in constellation_names.items():
+    for common_name, alt_name in constellation_names.items():
         # Filter dataframe for stars belonging to the current constellation
         mask = df['alt_name'].str.contains(alt_name, na=False)
         df_filtered = df[mask]
@@ -143,6 +120,47 @@ def results_to_csv():
     # Save the combined dataframe to CSV
     result_df.to_csv('../data/all_constellations_and_their_stars.csv', index=False)
 
+def query_simbad():
+    df = get_data_frame('data_j2000.csv')
 
+    with open('../data/query_simbad.txt', 'w') as file:
+        file.write('format object form1 "%IDLIST(1) : %PLX(V)"\n')
+        file.write('format display\n')
+        for row in df.hr:
+            file.write(f'query id HR {row}\n')
 
+import csv
 
+def join_simbad():
+    index_counter = 1
+    df = get_data_frame('data_j2000.csv')
+ 
+    # Drop specific row
+    index_to_drop = df[df['hr'] == 7539].index
+    df = df.drop(index_to_drop)
+
+    # Read and process data from text file
+    parallax_values = []
+    with open('../data/simbad_results.txt', 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            line = line.strip()
+            # Extract the part after the colon
+            data = line.split(' : ')[1]
+            parallax_values.append(data)
+
+    # Create a DataFrame from the text file data
+    df2 = pd.DataFrame({'parallax_simbad': parallax_values})
+
+    # Merge the two DataFrames
+    # Ensure that both df and df2 have the same number of rows
+    combined_df = pd.concat([df.reset_index(drop=True), df2.reset_index(drop=True)], axis=1)
+
+    combined_df['parallax_simbad'] = combined_df['parallax_simbad'].replace('~', 0)
+
+    combined_df['parallax_simbad'] = combined_df['parallax_simbad'].astype(float)
+
+    # Save the combined DataFrame
+    combined_df.to_csv('join_simbad.csv')
+
+    return combined_df

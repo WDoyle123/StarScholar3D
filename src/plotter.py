@@ -38,7 +38,7 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
     s = star_size(x)
 
     # create scatter plot on the 3d projection
-    scatter = ax.scatter(x, y, z, color=rgb, s=s)
+    scatter = ax.scatter(x, y, z, color=rgb, s=s, alpha=1.0)
 
     # add annotations if star names are provided
     if star_names is not None:
@@ -152,49 +152,53 @@ def capture_gif(title, fig, ax, start_view, of_type):
     # frames per second
     fps = 30
     
-    # initial gif pauses on asterism/constellation
-    pause_duration_sec = 2
+    if of_type == 'asterism':
 
-    # gets desired amount of frames for pause duration
-    pause_frames = int(pause_duration_sec * fps)
+        pause_duration_sec = 2
 
-    # the view angle of the asterism/constellation
-    initial_img = img_from_fig(fig)
+        pause_frames = int(pause_duration_sec * fps)
 
-    # put pause frames into frame array which stores all frames for gif
-    frames = [initial_img for _ in range(pause_frames)]
+        initial_img = img_from_fig(fig)
 
-    # set the initial view
-    ax.view_init(elev=start_view[0], azim=start_view[1])
-    img = img_from_fig(fig)
-    frames.append(img)
+        frames = [initial_img for _ in range(pause_frames)]
 
-    # transition to elevation 30 degrees
-    start_elev, start_azim = start_view
-    end_elev = 30
-
-    # find the amount of steps needed for transition
-    steps_elev = abs(end_elev - start_elev)
-    for step in range(steps_elev + 1):
-
-        # example halfway: elev = = -42 + (30 - (-42)) * 36 / 72 = -6
-        elev = start_elev + (end_elev - start_elev) * step / steps_elev
-        ax.view_init(elev=elev, azim=start_azim)
+        ax.view_init(elev=start_view[0], azim=start_view[1])
         img = img_from_fig(fig)
         frames.append(img)
+
+        start_elev, start_azim = start_view
+        end_elev = 30
+
+        # find the amount of steps needed for transition
+        steps_elev = abs(end_elev - start_elev)
+        for step in range(steps_elev + 1):
+            # example halfway: elev = = -42 + (30 - (-42)) * 36 / 72 = -6
+            elev = start_elev + (end_elev - start_elev) * step / steps_elev
+            ax.view_init(elev=elev, azim=start_azim)
+            img = img_from_fig(fig)
+            frames.append(img)
     
-    # rotate 360 degrees
-    for angle in range(start_azim, start_azim +  360, 1):
-        ax.view_init(elev=30, azim=angle)
-        img = img_from_fig(fig)
-        frames.append(img)
+        # rotate 360 degrees
+        for angle in range(start_azim, start_azim +  360, 1):
+            ax.view_init(elev=30, azim=angle)
+            img = img_from_fig(fig)
+            frames.append(img)
 
-    # transistion to start_elev
-    for step in range(steps_elev + 1):
-        elev = end_elev + (start_elev - end_elev) * step / steps_elev
-        ax.view_init(elev=elev, azim=start_azim)
-        img = img_from_fig(fig)
-        frames.append(img)
+        # transistion to start_elev
+        for step in range(steps_elev + 1):
+            elev = end_elev + (start_elev - end_elev) * step / steps_elev
+            ax.view_init(elev=elev, azim=start_azim)
+            img = img_from_fig(fig)
+            frames.append(img)
+
+    if of_type == 'constellation' or title == 'all_stars':
+
+        frames = []
+
+        for angle in range(0, 360, 1):
+            ax.view_init(elev=30, azim=angle)
+            img = img_from_fig(fig)
+            frames.append(img)
 
     # path to animations directory
     animations_directory = os.path.join('..', 'animations')
@@ -213,6 +217,9 @@ def capture_gif(title, fig, ax, start_view, of_type):
         save_gif_to_directory = animations_constellations_directory
     if of_type == 'asterism':
         save_gif_to_directory = animations_asterisms_directory
+    if title == 'all_stars':
+        save_gif_to_directory = animations_directory
+
     # full file path
     gif_path = os.path.join(save_gif_to_directory, f'rotating_{title}.gif')
 

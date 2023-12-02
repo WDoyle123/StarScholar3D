@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from data_handler import load_data, check_and_convert_types, get_data_frame
+from data_handler import load_data, check_and_convert_types, get_data_frame, join_simbad
 from calculations import calculate_distance, calculate_x_coordinate, calculate_y_coordinate, calculate_z_coordinate, bv_color_to_rgb, degrees_to_radians, star_data_calculator
 from plotter import plot_3d_scatter
 
@@ -12,7 +12,10 @@ def big_dipper():
     view = (-43, -2)
 
     # get data from catalogue using j2000 coordinates
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
+
+    index_to_drop = df[df['hr'] == 5054].index
+    df = df.drop(index_to_drop)
 
     # Big Dipper stars in Ursa Major, alternative names and common names respectivly
     big_dipper_stars = ['79Zet UMa', '77Eps UMa', '69Del UMa', '64Gam UMa', '48Bet UMa', '50Alp UMa', '85Eta UMa']
@@ -54,7 +57,7 @@ def little_dipper():
     ordered_star_names = ['Polaris', 'Yidun', 'Eps UMi', 'Zet UMi', 'Kochab', 'Pherkad', 'Eta UMi']
     
     # load data from csv
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
 
     # find little dipeper stars in the df
     df = df[df['alt_name'].isin(little_dipper_stars)]
@@ -83,7 +86,7 @@ def summer_triangle():
     summer_triangle_stars = ['53Alp Aql', '50Alp Cyg', '3Alp Lyr']
     ordered_star_names = ['Altair', 'Deneb', 'Vega']
  
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
 
     # find summer triangle stars in the df
     df = df[df['alt_name'].isin(summer_triangle_stars)]
@@ -113,7 +116,7 @@ def orions_belt():
     ordered_star_names = ['Alnitak', 'Alnilam', 'Mintaka']
 
     # load data from csv
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
 
     # find Orion's Belt stars in the df
     df = df[df['alt_name'].isin(orions_belt_stars)]
@@ -143,7 +146,7 @@ def cassiopeia_w():
     ordered_star_names = ['Segin', 'Ruchbah', 'Gam Cas', 'Schedar', 'Caph']
 
     # load data from csv
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
 
     # find Cassiopeia W stars in the df
     df = df[df['alt_name'].isin(cassiopeia_w_stars)]

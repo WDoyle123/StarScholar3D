@@ -1,7 +1,9 @@
 import os
+import sys
+import time
 import pandas as pd
 
-from data_handler import get_data_frame, constellation_dictionary
+from data_handler import get_data_frame, get_constellation_dictionary, join_simbad
 from calculations import star_data_calculator
 from plotter import plot_3d_scatter, capture_gif
 from helper import greek_letter
@@ -9,16 +11,22 @@ from helper import greek_letter
 from matplotlib import pyplot as plt
 
 def constellations(plot=False, gif=False):
+    print("Starting Constellation processing...")
+
+    start_time = time.time()
 
     # load data from the yale bright star catalogue using j2000 coordinates
-    df = get_data_frame('data_j2000.csv')
+    df = join_simbad()
 
     # constellation dictionary is a function that gets the alt_name and combines it with the commmon name
     # alt_name = UMi, common_name = Ursa Major
-    constellation_names = constellation_dictionary(df)
+    constellation_names = get_constellation_dictionary()
    
+    len_of_df = len(constellation_names)
+    counter = 0
+
     # get both name types from the dictionary
-    for alt_name, common_name in constellation_names.items():
+    for common_name, alt_name in constellation_names.items():
 
         # convert to lower case and if common_name has a space change to underscore
         unchanged_title = common_name
@@ -48,6 +56,7 @@ def constellations(plot=False, gif=False):
                 df_filtered.rgb_color.values, \
                 title=title, \
                 lines=False) 
+        plt.close()
 
         # show plot if true
         if plot:
@@ -57,10 +66,29 @@ def constellations(plot=False, gif=False):
         # create gif if true 
         # WILL TAKE ABOUT 33 MINS FOR ALL CONSTELLATIONS
         if gif:
-            print(f'Creating gif for: {unchanged_title}')
             capture_gif(title, fig, ax, view, of_type='constellation')
             plt.close()
 
-    # plt close needed due to the generation of many graphs in the function
-    plt.close()
+        counter += 1
+
+        # Calculate the percentage and the elapsed time
+        percent_complete = (counter / len_of_df) * 100
+        elapsed_time = time.time() - start_time
+
+        # Estimate remaining time
+        # Avoid division by zero and handle the case when counter is still 0
+        if counter > 0:
+            remaining_time = (elapsed_time / counter) * (len_of_df - counter)
+            remaining_minutes = int(remaining_time // 60)
+            remaining_seconds = int(remaining_time % 60)
+            print(f'\rConstellation Progress: {percent_complete:.2f}% complete - Time remaining: {remaining_minutes}m {remaining_seconds}s', end='', flush=True)
+        else:
+            print(f'\rConstellation Progress: {percent_complete:.2f}% complete - Time remaining: estimating...', end='', flush=True)
+
+    # After the loop, print the total time taken
+    total_time = time.time() - start_time
+    total_minutes = int(total_time // 60)
+    total_seconds = int(total_time % 60)
+    print(f"\nAll constellations processed! Total time: {total_minutes}m {total_seconds}s")
+
     return None

@@ -7,7 +7,7 @@ def star_data_calculator(df, ordered_star_names=None):
     df = df.copy()    
 
     # remove any NaN and zero values found in parallax column
-    df = df[(df['parallax'].notna() & df.parallax != 0)]
+    df = df[(df['parallax_simbad'].notna() & df.parallax_simbad != 0)]
     
     # Replace NaN values in 'bv_color' with 0.5
     df['bv_color'] = df['bv_color'].fillna(0.5)
@@ -17,14 +17,14 @@ def star_data_calculator(df, ordered_star_names=None):
     df['ra'] = df.apply(lambda row: degrees_to_radians(row['ra']), axis=1)
 
     # Calculate x, y, z coordinates and RGB colors, and add them to the df
-    df['distance'] = df.apply(lambda row: calculate_distance(row['parallax']), axis=1)
+    df['distance'] = df.apply(lambda row: calculate_distance(row['parallax_simbad']), axis=1)
 
     if ordered_star_names is not None:
         # create order to the stars, this allows for connecting the stars using a line plot in plotter.py
         df['common_name'] = pd.Categorical(df['common_name'], categories=ordered_star_names, ordered=True)
         df = df.sort_values(by='common_name')
 
-        df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
+        #df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
 
     # create x y z coordinates in the df using distance, declination and right acension
     df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
@@ -46,6 +46,8 @@ def calculate_distance(parallax):
     '''
     calculates distance in parsecs if parallax is in arcseconds
     '''
+    # convert to arc seconds from milli arc seconds
+    parallax = parallax / 1000
     return 1 / parallax
 
 # source for calculating x,y,z https://www.jameswatkins.me/posts/converting-equatorial-to-cartesian.html
