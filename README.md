@@ -17,12 +17,15 @@ Please note that StarScholar3D is currently a work in progress. Features are bei
 Below are some visualisations created using StarScholar3D:
 
 ![All Stars](/animations/rotating_all_stars.gif)
+
 *Visualisation of all stars in the Yale Bright Stars Catalogue*
 
 ![Big Dipper](/animations/asterisms/rotating_big_dipper.gif)
+
 *Visualisation of the Big Dipper Asterism.*
 
 ![Cassiopeia](/animations/constellations/rotating_cassiopeia.gif)
+
 *Visualisation of the Cassiopeia Constellation.*
 
 ## License
