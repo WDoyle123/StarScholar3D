@@ -16,9 +16,14 @@ Please note that StarScholar3D is currently a work in progress. Features are bei
 ## Visualisations
 Below are some visualisations created using StarScholar3D:
 
-![Big Dipper](/animations/asterisms/rotating_big_dipper.gif)
+![All Stars](/animations/rotating_all_stars.gif)
+*Visualisation of all stars in the Yale Bright Stars Catalogue*
 
-*Visualisation of the Big Dipper asterism.*
+![Big Dipper](/animations/asterisms/rotating_big_dipper.gif)
+*Visualisation of the Big Dipper Asterism.*
+
+![Cassiopeia](/animations/constellations/rotating_cassiopeia.gif)
+*Visualisation of the Cassiopeia Constellation.*
 
 ## License
 see the [LICENSE](LICENSE) file for details.
@@ -26,3 +31,4 @@ see the [LICENSE](LICENSE) file for details.
 ## Acknowledgments
 - [Yale Bright Star Catalogue](https://heasarc.gsfc.nasa.gov/db-perl/W3Browse/w3table.pl?tablehead=name%3Dbsc5p&Action=More+Options)
 - [International Astronomical Union](https://www.iau.org/public/themes/naming_stars/)
+- [SIMBAD](http://simbad.cds.unistra.fr/simbad/sim-fscript)
