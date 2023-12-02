@@ -54,9 +54,9 @@ def constellations(plot=False, gif=False):
                 df_filtered.y_coordinate.values, \
                 df_filtered.z_coordinate.values, \
                 df_filtered.rgb_color.values, \
+                df_filtered.star_size.values, \
                 title=title, \
                 lines=False) 
-        plt.close()
 
         # show plot if true
         if plot:
@@ -69,6 +69,7 @@ def constellations(plot=False, gif=False):
             capture_gif(title, fig, ax, view, of_type='constellation')
             plt.close()
 
+        plt.close()
         counter += 1
 
         # Calculate the percentage and the elapsed time

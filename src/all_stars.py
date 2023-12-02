@@ -14,6 +14,12 @@ def all_stars():
     title='all_stars'
 
     # plots 3d scatter diagram 
-    fig, ax, view = plot_3d_scatter(df.x_coordinate, df.y_coordinate, df.z_coordinate, df.rgb_color, title=title, lines=False)
+    fig, ax, view = plot_3d_scatter(df.x_coordinate,
+                                    df.y_coordinate,
+                                    df.z_coordinate,
+                                    df.rgb_color,
+                                    df.star_size,
+                                    title=title,
+                                    lines=False)
 
     return title, fig, ax, view 

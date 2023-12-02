@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import math
 
 def star_data_calculator(df, ordered_star_names=None):
 
@@ -12,6 +13,8 @@ def star_data_calculator(df, ordered_star_names=None):
     # Replace NaN values in 'bv_color' with 0.5
     df['bv_color'] = df['bv_color'].fillna(0.5)
 
+    df['star_size'] = df.apply(lambda row: assign_star_size(row['vmag']), axis=1)
+
     # turns degrees to radians (np.sin and np.cos already do this but this will update the df)
     df['dec'] = df.apply(lambda row: degrees_to_radians(row['dec']), axis=1)
     df['ra'] = df.apply(lambda row: degrees_to_radians(row['ra']), axis=1)
@@ -23,8 +26,6 @@ def star_data_calculator(df, ordered_star_names=None):
         # create order to the stars, this allows for connecting the stars using a line plot in plotter.py
         df['common_name'] = pd.Categorical(df['common_name'], categories=ordered_star_names, ordered=True)
         df = df.sort_values(by='common_name')
-
-        #df.loc[df['common_name'] == 'Alioth', 'distance'] = 25
 
     # create x y z coordinates in the df using distance, declination and right acension
     df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
@@ -123,3 +124,20 @@ def bv_color_to_rgb(bv_color):
     '''
     temperature = bv_to_temperature(bv_color)
     return temperature_to_rgb(temperature)
+
+def assign_star_size(vmag):
+    if vmag < 2:
+        size = 200  # Largest size for the brightest stars
+    elif vmag < 3:
+        size = 100
+    elif vmag < 4:
+        size = 50
+    elif vmag < 5:
+        size = 25
+    elif vmag < 6:
+        size = 12
+    else:
+        size = 6  # Smaller size for fainter stars
+
+    return size
+

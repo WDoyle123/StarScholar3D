@@ -7,12 +7,12 @@ from data_handler import results_to_csv, query_simbad, join_simbad
 from matplotlib import pyplot as plt
 
 # flags for toggling gif capture and plot display
-capture_gif_flag = False
+capture_gif_flag = True
 show_plot_flag = False
 
 # flags for processing asterisms and constellations
 process_asterisms = True
-process_constellations = True
+process_constellations = False
 process_all_stars = False
 
 # lists of functions for asterisms and constellations#

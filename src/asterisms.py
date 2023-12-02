@@ -42,7 +42,14 @@ def big_dipper():
     df = star_data_calculator(df, ordered_star_names)
 
     # plots the Big Dipper asterism
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+    fig, ax, view = plot_3d_scatter(
+            df.x_coordinate.values, \
+            df.y_coordinate.values, \
+            df.z_coordinate.values, \
+            df.rgb_color.values,    \
+            df.star_size.values,    \
+            df.common_name.values,  \
+            title=title, view=view)
 
     return title, fig, ax, view
 
@@ -72,7 +79,14 @@ def little_dipper():
     df = star_data_calculator(df, ordered_star_names)
 
     # plots the Little Dipper asterism
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+    fig, ax, view = plot_3d_scatter(
+            df.x_coordinate.values, \
+            df.y_coordinate.values, \
+            df.z_coordinate.values, \
+            df.rgb_color.values,    \
+            df.star_size.values,    \
+            df.common_name.values,  \
+            title=title, view=view)
 
     return title, fig, ax, view
 
@@ -101,7 +115,14 @@ def summer_triangle():
     df = star_data_calculator(df, ordered_star_names)
 
     # plots the Summer Triangle asterism
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+    fig, ax, view = plot_3d_scatter(
+            df.x_coordinate.values, \
+            df.y_coordinate.values, \
+            df.z_coordinate.values, \
+            df.rgb_color.values,    \
+            df.star_size.values,    \
+            df.common_name.values,  \
+            title=title, view=view)
 
     return title, fig, ax, view
 
@@ -126,13 +147,25 @@ def orions_belt():
 
     # apply mapping
     df['common_name'] = df['alt_name'].map(name_mapping)
+       
+    df['parallax_simbad'] = df['parallax']
+
+    df = df.loc[df['hr'] != 1949]
+    df = df.loc[df['hr'] != 1851]
 
     # apply calculations such as getting coordinates and color 
     df = star_data_calculator(df, ordered_star_names)
 
     # plots the Orion's Belt asterism
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
-
+    fig, ax, view = plot_3d_scatter(
+            df.x_coordinate.values, \
+            df.y_coordinate.values, \
+            df.z_coordinate.values, \
+            df.rgb_color.values,    \
+            df.star_size.values,    \
+            df.common_name.values,  \
+            title=title, view=view)
+    
     return title, fig, ax, view
 
 def cassiopeia_w():
@@ -161,7 +194,14 @@ def cassiopeia_w():
     df = star_data_calculator(df, ordered_star_names)
 
     # plots the Cassiopeia W asterism
-    fig, ax, view = plot_3d_scatter(df.x_coordinate.values, df.y_coordinate.values, df.z_coordinate.values, df.rgb_color.values, df.common_name.values, title=title, view=view)
+    fig, ax, view = plot_3d_scatter(
+            df.x_coordinate.values, \
+            df.y_coordinate.values, \
+            df.z_coordinate.values, \
+            df.rgb_color.values,    \
+            df.star_size.values,    \
+            df.common_name.values,  \
+            title=title, view=view)
 
     return title, fig, ax, view
 

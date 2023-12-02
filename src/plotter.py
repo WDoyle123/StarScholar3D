@@ -7,12 +7,6 @@ import numpy as np
 import os
 from PIL import Image
 
-def star_size(x):
-    if len(x) < 10:
-        return 50
-    else:
-        return 15
-
 def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='white', linewidth=1):
     if star1 in star_names and star2 in star_names:
         star_names_list = list(star_names)
@@ -24,7 +18,7 @@ def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='wh
                 [star_coords['z'][index_star1], star_coords['z'][index_star2]],
                 color=color, linewidth=linewidth)
 
-def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
+def plot_3d_scatter(x, y, z, rgb, star_size, star_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
  
     # create figure
     fig = plt.figure(figsize=(10, 8))
@@ -34,11 +28,8 @@ def plot_3d_scatter(x, y, z, rgb, star_names=None, title=None, view=None, lines=
     ax = fig.add_subplot(111, projection='3d')
     ax.set_facecolor('black')
 
-    # calculate the size of stars (not to scale)
-    s = star_size(x)
-
     # create scatter plot on the 3d projection
-    scatter = ax.scatter(x, y, z, color=rgb, s=s, alpha=1.0)
+    scatter = ax.scatter(x, y, z, color=rgb, s=star_size, alpha=1.0, depthshade=False)
 
     # add annotations if star names are provided
     if star_names is not None:
