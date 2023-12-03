@@ -16,8 +16,8 @@ def star_data_calculator(df, ordered_star_names=None):
     df['star_size'] = df.apply(lambda row: assign_star_size(row['vmag']), axis=1)
 
     # turns degrees to radians (np.sin and np.cos already do this but this will update the df)
-    df['dec'] = df.apply(lambda row: degrees_to_radians(row['dec']), axis=1)
-    df['ra'] = df.apply(lambda row: degrees_to_radians(row['ra']), axis=1)
+    df['dec_simbad'] = df.apply(lambda row: degrees_to_radians(row['dec_simbad']), axis=1)
+    df['ra_simbad'] = df.apply(lambda row: degrees_to_radians(row['ra_simbad']), axis=1)
 
     # Calculate x, y, z coordinates and RGB colors, and add them to the df
     df['distance'] = df.apply(lambda row: calculate_distance(row['parallax_simbad']), axis=1)
@@ -28,9 +28,9 @@ def star_data_calculator(df, ordered_star_names=None):
         df = df.sort_values(by='common_name')
 
     # create x y z coordinates in the df using distance, declination and right acension
-    df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
-    df['y_coordinate'] = df.apply(lambda row: calculate_y_coordinate((row['distance']), row['dec'], row['ra']), axis=1)
-    df['z_coordinate'] = df.apply(lambda row: calculate_z_coordinate((row['distance']), row['dec']), axis=1)
+    df['x_coordinate'] = df.apply(lambda row: calculate_x_coordinate((row['distance']), row['dec_simbad'], row['ra_simbad']), axis=1)
+    df['y_coordinate'] = df.apply(lambda row: calculate_y_coordinate((row['distance']), row['dec_simbad'], row['ra_simbad']), axis=1)
+    df['z_coordinate'] = df.apply(lambda row: calculate_z_coordinate((row['distance']), row['dec_simbad']), axis=1)
 
     # creates a color variable to each star (approximatly)
     df['rgb_color'] = df['bv_color'].apply(lambda row: bv_color_to_rgb(row))
@@ -141,3 +141,24 @@ def assign_star_size(vmag):
 
     return size
 
+def find_closest_star_view(df):
+
+    # Find the row with the smallest distance value
+    closest_star = df.loc[df['distance'].idxmin()]
+
+    # Get the x, y, z coordinates of the closest star
+    x, y, z = closest_star['x_coordinate'], closest_star['y_coordinate'], closest_star['z_coordinate']
+
+    # Calculate the azimuth and elevation angles for the view with origin (0, 0)
+    azimuth = np.degrees(np.arctan2(y, x)) % 360
+    elevation = np.degrees(np.arctan2(z, np.sqrt(x**2 + y**2)))
+
+    # Adjust the azimuth to face the star directly
+    azimuth = (azimuth + 180) % 360
+    if azimuth > 180:  # Adjust azimuth to the range (-180, 180)
+        azimuth -= 360
+
+    # Make sure elevation is in the range (-90, 90) avoid inversion
+    elevation = max(min(elevation, 90), -90)
+
+    return elevation, azimuth

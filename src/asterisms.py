@@ -1,207 +1,96 @@
 import os
+import sys
+import time
 import pandas as pd
+from matplotlib import pyplot as plt
 
-from data_handler import load_data, check_and_convert_types, get_data_frame, join_simbad
-from calculations import calculate_distance, calculate_x_coordinate, calculate_y_coordinate, calculate_z_coordinate, bv_color_to_rgb, degrees_to_radians, star_data_calculator
-from plotter import plot_3d_scatter
+from data_handler import get_data_frame, get_dictionary, join_simbad
+from calculations import star_data_calculator, find_closest_star_view
+from plotter import plot_3d_scatter, capture_gif
 
-def big_dipper():
+def asterisms(plot=False, gif=False):
+    print("Starting Asterism processing...")
 
-    # title and view for figure and gif
-    title = 'big_dipper'
-    view = (-43, -2)
+    start_time = time.time()
 
-    # get data from catalogue using j2000 coordinates
-    df = join_simbad()
+    asterisms_dictionary = get_dictionary('asterism_names')
 
-    index_to_drop = df[df['hr'] == 5054].index
-    df = df.drop(index_to_drop)
+    len_of_df = len(asterisms_dictionary)
+    counter = 0
 
-    # Big Dipper stars in Ursa Major, alternative names and common names respectivly
-    big_dipper_stars = ['79Zet UMa', '77Eps UMa', '69Del UMa', '64Gam UMa', '48Bet UMa', '50Alp UMa', '85Eta UMa']
-    ordered_star_names = ['Alkaid', 'Mizar', 'Alioth', 'Megrez', 'Dubhe', 'Merak', 'Phecda']
+    # get both name types from the dictionary
+    for asterism_name, hr_names in asterisms_dictionary.items():
 
-    # filter the df to include only the Big Dipper stars
-    df = df[df['alt_name'].isin(big_dipper_stars)]
+        # convert to lower case and if common_name has a space change to underscore
+        unchanged_title = asterism_name
+        title = asterism_name.lower().replace(' ', '_')
 
-    # map alternative names to common names
-    name_mapping = {
-        '85Eta UMa': 'Alkaid',    
-        '79Zet UMa': 'Mizar',
-        '77Eps UMa': 'Alioth',
-        '69Del UMa': 'Megrez',
-        '64Gam UMa': 'Phecda',
-        '48Bet UMa': 'Merak',
-        '50Alp UMa': 'Dubhe'
-    }
-    
-    # apply mapping
-    df['common_name'] = df['alt_name'].map(name_mapping)
+        df = join_simbad()
+        
+        # .copy to avoid copy of sclice warning
+        df_filtered = df[df['hr'].isin(hr_names)].copy()
 
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df, ordered_star_names)
+        # Create a temporary mapping from hr names to indices based on their order in hr_names
+        order_mapping = {hr_name: i for i, hr_name in enumerate(hr_names)}
 
-    # plots the Big Dipper asterism
-    fig, ax, view = plot_3d_scatter(
-            df.x_coordinate.values, \
-            df.y_coordinate.values, \
-            df.z_coordinate.values, \
-            df.rgb_color.values,    \
-            df.star_size.values,    \
-            df.common_name.values,  \
-            title=title, view=view)
+        # Map each hr name in df_filtered to its corresponding index
+        df_filtered['order'] = df_filtered['hr'].map(order_mapping)
 
-    return title, fig, ax, view
+        # Sort df_filtered by this order
+        df_filtered = df_filtered.sort_values('order')
 
-def little_dipper():
-    
-    # for figure and gif
-    title = 'little_dipper'
-    view = (29, -135)
+        # Drop the temporary 'order' column
+        df_filtered = df_filtered.drop('order', axis=1)
 
-    # Little Dipper stars in Ursa Minor, alternative names and common names respectivly
-    little_dipper_stars = ['1Alp UMi', '23Del UMi', '22Eps UMi', '16Zet UMi', '7Bet UMi', '13Gam UMi', '21Eta UMi']
-    ordered_star_names = ['Polaris', 'Yidun', 'Eps UMi', 'Zet UMi', 'Kochab', 'Pherkad', 'Eta UMi']
-    
-    # load data from csv
-    df = join_simbad()
+        # Calculate the coordinates and colour from right acension and declination aswell as bv colour 
+        df_filtered = star_data_calculator(df_filtered)
 
-    # find little dipeper stars in the df
-    df = df[df['alt_name'].isin(little_dipper_stars)]
+        elevation, azimuth = find_closest_star_view(df_filtered)
 
-    # map alternative names to common names
-    name_mapping = dict(zip(little_dipper_stars, ordered_star_names))
+        # plot the 3D scatter plot 
+        fig, ax, view, = plot_3d_scatter( 
+                df_filtered.x_coordinate.values, \
+                df_filtered.y_coordinate.values, \
+                df_filtered.z_coordinate.values, \
+                df_filtered.rgb_color.values,    \
+                df_filtered.star_size.values,    \
+                df_filtered.iau_name.values,     \
+                title=title,                     \
+                view=(int(elevation) + 90, int(azimuth) - 10),\
+                lines=True) 
 
-    # apply mapping
-    df['common_name'] = df['alt_name'].map(name_mapping)
+        # show plot if true
+        if plot:
+            plt.show()
+            plt.close(fig)
 
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df, ordered_star_names)
+        # create gif if true 
+        # WILL TAKE ABOUT 3 MINS FOR ALL Asterisms
+        if gif:
+            capture_gif(title, fig, ax, view, of_type='asterism')
+            plt.close()
 
-    # plots the Little Dipper asterism
-    fig, ax, view = plot_3d_scatter(
-            df.x_coordinate.values, \
-            df.y_coordinate.values, \
-            df.z_coordinate.values, \
-            df.rgb_color.values,    \
-            df.star_size.values,    \
-            df.common_name.values,  \
-            title=title, view=view)
+        plt.close()
+        counter += 1
 
-    return title, fig, ax, view
+        # Calculate the percentage and the elapsed time
+        percent_complete = (counter / len_of_df) * 100
+        elapsed_time = time.time() - start_time
 
-def summer_triangle():
-    
-    # for figure and gif
-    title = 'summer_triangle'
-    view = (29, -135)
+        # Estimate remaining time
+        # Avoid division by zero and handle the case when counter is still 0
+        if counter > 0:
+            remaining_time = (elapsed_time / counter) * (len_of_df - counter)
+            remaining_minutes = int(remaining_time // 60)
+            remaining_seconds = int(remaining_time % 60)
+            print(f'\rAsterism Progress: {percent_complete:.2f}% complete - Time remaining: {remaining_minutes}m {remaining_seconds}s', end='', flush=True)
+        else:
+            print(f'\rAsterism Progress: {percent_complete:.2f}% complete - Time remaining: estimating...', end='', flush=True)
 
-    # Summer Triangle stars in Ursa Minor, alternative names and common names respectivly
-    summer_triangle_stars = ['53Alp Aql', '50Alp Cyg', '3Alp Lyr']
-    ordered_star_names = ['Altair', 'Deneb', 'Vega']
- 
-    df = join_simbad()
+    # After the loop, print the total time taken
+    total_time = time.time() - start_time
+    total_minutes = int(total_time // 60)
+    total_seconds = int(total_time % 60)
+    print(f"\nAll Asterisms processed! Total time: {total_minutes}m {total_seconds}s")
 
-    # find summer triangle stars in the df
-    df = df[df['alt_name'].isin(summer_triangle_stars)]
-
-    # map alternative names to common names
-    name_mapping = dict(zip(summer_triangle_stars, ordered_star_names))
-
-    # apply mapping 
-    df['common_name'] = df['alt_name'].map(name_mapping)
-
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df, ordered_star_names)
-
-    # plots the Summer Triangle asterism
-    fig, ax, view = plot_3d_scatter(
-            df.x_coordinate.values, \
-            df.y_coordinate.values, \
-            df.z_coordinate.values, \
-            df.rgb_color.values,    \
-            df.star_size.values,    \
-            df.common_name.values,  \
-            title=title, view=view)
-
-    return title, fig, ax, view
-
-def orions_belt():
-
-    # for figure and gif
-    title = 'orions_belt'
-    view = (28, -135)
-
-    # Orion's Belt stars in Orion, alternative names and common names respectively
-    orions_belt_stars = ['50Zet Ori', '28Eta Ori', '34Del Ori']
-    ordered_star_names = ['Alnitak', 'Alnilam', 'Mintaka']
-
-    # load data from csv
-    df = join_simbad()
-
-    # find Orion's Belt stars in the df
-    df = df[df['alt_name'].isin(orions_belt_stars)]
-
-    # map alternative names to common names
-    name_mapping = dict(zip(orions_belt_stars, ordered_star_names))
-
-    # apply mapping
-    df['common_name'] = df['alt_name'].map(name_mapping)
-       
-    df['parallax_simbad'] = df['parallax']
-
-    df = df.loc[df['hr'] != 1949]
-    df = df.loc[df['hr'] != 1851]
-
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df, ordered_star_names)
-
-    # plots the Orion's Belt asterism
-    fig, ax, view = plot_3d_scatter(
-            df.x_coordinate.values, \
-            df.y_coordinate.values, \
-            df.z_coordinate.values, \
-            df.rgb_color.values,    \
-            df.star_size.values,    \
-            df.common_name.values,  \
-            title=title, view=view)
-    
-    return title, fig, ax, view
-
-def cassiopeia_w():
-
-    # for figure and gif
-    title = 'cassiopeia_w'
-    view = (-27, -165)
-
-    # Cassiopeia W stars, alternative names and common names respectively
-    cassiopeia_w_stars = ['45Eps Cas', '37Del Cas', '27Gam Cas', '18Alp Cas', '11Bet Cas']
-    ordered_star_names = ['Segin', 'Ruchbah', 'Gam Cas', 'Schedar', 'Caph']
-
-    # load data from csv
-    df = join_simbad()
-
-    # find Cassiopeia W stars in the df
-    df = df[df['alt_name'].isin(cassiopeia_w_stars)]
-
-    # map alternative names to common names
-    name_mapping = dict(zip(cassiopeia_w_stars, ordered_star_names))
-
-    # apply mapping
-    df['common_name'] = df['alt_name'].map(name_mapping)
-
-    # apply calculations such as getting coordinates and color 
-    df = star_data_calculator(df, ordered_star_names)
-
-    # plots the Cassiopeia W asterism
-    fig, ax, view = plot_3d_scatter(
-            df.x_coordinate.values, \
-            df.y_coordinate.values, \
-            df.z_coordinate.values, \
-            df.rgb_color.values,    \
-            df.star_size.values,    \
-            df.common_name.values,  \
-            title=title, view=view)
-
-    return title, fig, ax, view
-
+    return None

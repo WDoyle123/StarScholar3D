@@ -39,6 +39,25 @@ def check_and_convert_types(df):
                     print(f"Error converting {column}: {e}")
     return df
 
+def convert_ra_to_deg(ra):
+    # Split the string into hours, minutes, and seconds
+    parts = ra.split()
+    if len(parts) != 3:
+        return None  # Handle invalid format
+    hours, minutes, seconds = map(float, parts)
+    # Convert to degrees
+    return 15 * (hours + minutes/60 + seconds/3600)
+
+
+def convert_dec_to_deg(dec):
+    # Split the string into degrees, arcminutes, and arcseconds
+    parts = dec.split()
+    if len(parts) != 3:
+        return None  # Handle invalid format
+    degrees, arcminutes, arcseconds = map(float, parts)
+    # Convert to decimal degrees
+    return degrees + arcminutes/60 + arcseconds/3600
+
 def get_data_frame(file):
 
     # current directory
@@ -50,25 +69,28 @@ def get_data_frame(file):
     # load data from csv to pandas dataframe
     df = load_data(data_file_path)
 
-    # check if types are correct and convert if otherwise
-    df = check_and_convert_types(df)
+    df = standard_hr_column(df)
 
     return df
 
-def get_constellation_dictionary():
-    # get the current directory 
-    current_dir = os.path.dirname('src')
+def get_dictionary(file_name):
+    # Get the current directory 
+    current_dir = os.getcwd()
 
-    # Construct the file path to 'constellation_names.py'
-    file_path = os.path.join(current_dir, '..', 'data', 'constellation_names.py')
+    # Construct the file path to the Python file
+    file_path = os.path.join(current_dir, '..', 'data', f'{file_name}.py')
 
-    # Add the directory containing 'constellation_names.py' to sys.path
+    # Add the directory containing the Python file to sys.path
     sys.path.append(os.path.dirname(file_path))
 
-    # Import 'common_names' from 'constellation_names'
-    from constellation_names import constellation_abbreviations
+    # Import the module using its filename
+    module = __import__(file_name)
 
-    return constellation_abbreviations
+    # Extract the dictionary with the same name as the file
+    if file_name in module.__dict__:
+        return module.__dict__[file_name]
+    else:
+        raise ImportError(f"{file_name} dictionary not found in the specified module")
 
 from calculations import star_data_calculator
 from helper import greek_letter
@@ -124,43 +146,45 @@ def query_simbad():
     df = get_data_frame('data_j2000.csv')
 
     with open('../data/query_simbad.txt', 'w') as file:
-        file.write('format object form1 "%IDLIST(1) : %PLX(V)"\n')
-        file.write('format display\n')
+        file.write('format object f1 "%IDLIST(HR),%COO(A),%COO(D),%PLX(V)"\n')
         for row in df.hr:
             file.write(f'query id HR {row}\n')
 
 import csv
 
+def standard_hr_column(df):
+
+    df['hr'] = df['hr'].str.strip()
+    df['hr'] = df['hr'].str.replace(' ', '')
+
+    return df
+
 def join_simbad():
-    index_counter = 1
-    df = get_data_frame('data_j2000.csv')
- 
-    # Drop specific row
-    index_to_drop = df[df['hr'] == 7539].index
-    df = df.drop(index_to_drop)
 
-    # Read and process data from text file
-    parallax_values = []
-    with open('../data/simbad_results.txt', 'r') as file:
-        lines = file.readlines()
-        for line in lines:
-            line = line.strip()
-            # Extract the part after the colon
-            data = line.split(' : ')[1]
-            parallax_values.append(data)
+    # Load data from CSV files
+    df_ysb = get_data_frame('data_j2000.csv')
+    df_simbad = get_data_frame('simbad_results.csv')
+    df_iau = get_data_frame('iau_star_names.csv')
 
-    # Create a DataFrame from the text file data
-    df2 = pd.DataFrame({'parallax_simbad': parallax_values})
+    df_iau.rename(columns={'IAU Name ' : 'iau_name', 'Origin' : 'origin', 'Etymology Note' : 'note', 'Source' : 'source'}, inplace=True)
 
-    # Merge the two DataFrames
-    # Ensure that both df and df2 have the same number of rows
-    combined_df = pd.concat([df.reset_index(drop=True), df2.reset_index(drop=True)], axis=1)
+    df_simbad['ra'] = df_simbad.apply(lambda row: convert_ra_to_deg(row['ra']), axis=1)
+    df_simbad['dec'] = df_simbad.apply(lambda row: convert_dec_to_deg(row['dec']), axis=1)
+    
+    update = df_ysb[df_ysb['hr'] == 7539].index
 
-    combined_df['parallax_simbad'] = combined_df['parallax_simbad'].replace('~', 0)
+    # Merge the two DataFrames on 'hr' column with suffixes
+    combined_df = pd.merge(df_ysb, df_simbad, on='hr', how='inner', suffixes=('_ysb', '_simbad'))
+    combined_df = pd.merge(combined_df, df_iau[['hr', 'iau_name']], on='hr', how='left')
 
+    # Handling missing parallax values
+    combined_df['parallax_simbad'] = combined_df['parallax_simbad'].replace('~ ', 0)
     combined_df['parallax_simbad'] = combined_df['parallax_simbad'].astype(float)
 
+    # hr 1948 doenst have a parallax_simbad value so using parallax_ysb instead
+    combined_df.loc[combined_df['hr'] == 'HR1948', 'parallax_simbad'] = combined_df.loc[combined_df['hr'] == 'HR1948', 'parallax_ysb'] * 1000
+
     # Save the combined DataFrame
-    combined_df.to_csv('join_simbad.csv')
+    combined_df.to_csv('../data/joined_simbad.csv', index=False)
 
     return combined_df

@@ -3,8 +3,8 @@ import sys
 import time
 import pandas as pd
 
-from data_handler import get_data_frame, get_constellation_dictionary, join_simbad
-from calculations import star_data_calculator
+from data_handler import get_data_frame, get_dictionary, join_simbad
+from calculations import star_data_calculator, find_closest_star_view
 from plotter import plot_3d_scatter, capture_gif
 from helper import greek_letter
 
@@ -20,7 +20,7 @@ def constellations(plot=False, gif=False):
 
     # constellation dictionary is a function that gets the alt_name and combines it with the commmon name
     # alt_name = UMi, common_name = Ursa Major
-    constellation_names = get_constellation_dictionary()
+    constellation_names = get_dictionary('constellation_names')
    
     len_of_df = len(constellation_names)
     counter = 0
@@ -48,14 +48,18 @@ def constellations(plot=False, gif=False):
         # Calculate the coordinates and colour from right acension and declination aswell as bv colour 
         df_filtered = star_data_calculator(df_filtered)
 
+        elevation, azimuth = find_closest_star_view(df_filtered)
+
         # plot the 3D scatter plot 
         fig, ax, view, = plot_3d_scatter( 
                 df_filtered.x_coordinate.values, \
                 df_filtered.y_coordinate.values, \
                 df_filtered.z_coordinate.values, \
-                df_filtered.rgb_color.values, \
-                df_filtered.star_size.values, \
-                title=title, \
+                df_filtered.rgb_color.values,    \
+                df_filtered.star_size.values,    \
+                df_filtered.iau_name.values,     \
+                title=title,                     \
+                view=(elevation, azimuth),       \
                 lines=False) 
 
         # show plot if true

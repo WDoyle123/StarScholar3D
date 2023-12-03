@@ -1,5 +1,4 @@
-format object form1 "%IDLIST(1) : %PLX(V)"
-format display
+format object f1 "%IDLIST(HR),%COO(A),%COO(D),%PLX(V)"
 query id HR 1
 query id HR 2
 query id HR 3

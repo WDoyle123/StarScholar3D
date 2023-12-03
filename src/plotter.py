@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import os
 from PIL import Image
+import pandas as pd
 
 def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='white', linewidth=1):
     if star1 in star_names and star2 in star_names:
@@ -18,7 +19,7 @@ def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='wh
                 [star_coords['z'][index_star1], star_coords['z'][index_star2]],
                 color=color, linewidth=linewidth)
 
-def plot_3d_scatter(x, y, z, rgb, star_size, star_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
+def plot_3d_scatter(x, y, z, rgb, star_size, iau_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
  
     # create figure
     fig = plt.figure(figsize=(10, 8))
@@ -32,28 +33,29 @@ def plot_3d_scatter(x, y, z, rgb, star_size, star_names=None, title=None, view=N
     scatter = ax.scatter(x, y, z, color=rgb, s=star_size, alpha=1.0, depthshade=False)
 
     # add annotations if star names are provided
-    if star_names is not None:
-        star_names_fontsize = 12
+    if iau_names is not None:
+        star_names_fontsize = 8
         for i in range(len(x)):
-            ax.text(x[i], y[i], z[i], star_names[i], color='white', fontsize=star_names_fontsize)
+                name_to_plot = '' if pd.isna(iau_names[i]) else iau_names[i]
+                ax.text(x[i], y[i], z[i], name_to_plot, color='white', fontsize=star_names_fontsize, alpha=0.75)
 
     # draw lines connecting the stars
     if lines == True:
         ax.plot(x, y, z, color='white', linewidth=1)
         
-        if star_names is not None:
-    
-            # connect stars in a 'closed loop'
-            star_coords = {'x': x, 'y': y, 'z': z}
+        star_names = [star for star in iau_names]
 
-            # for big dipper
-            draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
-    
-            # for little dipper
-            draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
+        # connect stars in a 'closed loop'
+        star_coords = {'x': x, 'y': y, 'z': z}
 
-            # for summer triangle
-            draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
+        # for big dipper
+        draw_line_between_stars(ax, star_names, star_coords, 'Phecda', 'Megrez')
+    
+        # for little dipper
+        draw_line_between_stars(ax, star_names, star_coords, 'Eta UMi', 'Zet UMi')
+
+        # for summer triangle
+        draw_line_between_stars(ax, star_names, star_coords, 'Altair', 'Vega')
 
     # handling grid lines and axis labels
     if no_grid_lines:

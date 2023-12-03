@@ -1,4 +1,4 @@
-constellation_abbreviations = {
+constellation_names = {
     'Octans': 'Oct', 'Mensa': 'Men', 'Chamaeleon': 'Cha', 'Apus': 'Aps', 'Hydrus': 'Hyi', 
     'Musca': 'Mus', 'Volans': 'Vol', 'Pavo': 'Pav', 'Indus': 'Ind', 'Tucana': 'Tuc', 
     'Triangulum Australe': 'TrA', 'Carina': 'Car', 'Dorado': 'Dor', 'Circinus': 'Cir', 
