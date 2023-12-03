@@ -96,33 +96,28 @@ from calculations import star_data_calculator
 from helper import greek_letter
 
 def results_to_csv():
-    # Load the dataframes from CSV files
+    # Load and join dataframes
     df = join_simbad()
     df2 = get_data_frame('iau_star_names.csv')
 
-    df.rename(columns={'hr' : 'name'}, inplace=True)
+    # Join df and df2, including specific columns from df2
+    df = df.merge(df2[['hr', 'Origin', 'Etymology Note', 'Source']], 
+                  on='hr',  how='left', suffixes=('_simbad', '_iau'))
 
-    df['name'] = 'HR ' + df['name'].astype(str)
-
-    # Join df and df2 on 'Designation' in df2 and 'name' in df
-    # Only include specific columns from df2
-    df = df.merge(df2[['Designation', 'IAU Name ', 'Origin', 'Etymology Note', 'Source']], 
-                  left_on='name', right_on='Designation', how='left')
-
-    df.drop(columns=['Designation'], inplace=True)
-    df.rename(columns={'IAU Name ' : 'iau_name', 'Origin' : 'origin', 'Etymology Note' : 'note', 'Source' : 'source'}, inplace=True)
+    # Rename columns
+    df.rename(columns={'Origin': 'origin', 'Etymology Note': 'note', 'Source': 'source'}, inplace=True)
 
     # Get constellation names dictionary
-    constellation_names = get_constellation_dictionary()
+    constellation_names = get_dictionary('constellation_names')
 
     constellation_data_array = []
 
     for common_name, alt_name in constellation_names.items():
-        # Filter dataframe for stars belonging to the current constellation
+        # Filter dataframe for stars in the current constellation
         mask = df['alt_name'].str.contains(alt_name, na=False)
         df_filtered = df[mask]
 
-        # Special processing for specific constellations
+        # Special processing for certain constellations
         if alt_name in ['Del', 'Tau']:
             df_filtered = greek_letter(df_filtered, alt_name)
 
