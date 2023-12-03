@@ -10,6 +10,14 @@ StarScholar3D is an innovative project that leverages the extensive data from th
 - **Interactive Experience**: Enables users to explore and interact with the 3D star map.
 - **GIF Capture**: Enables the capturing of GIFs of the data visualisation.
 
+## Star Visualization Methodology
+In StarScholar3D, we employ specific astronomical metrics to enhance the visualisations:
+
+- **B-V Color Index**: The B-V color index is used in StarScholar3D to approximate the observed colour of stars. This index is a measure of the colour difference between a star's blue (B) and visual (V) magnitudes.
+- **V Magnitude (Vmag)**: The V magnitude of a star indicates its brightness as seen from Earth. In StarScholar3D, we use this metric to approximate the size of the stars in our 3D environment. Larger sizes are used for stars with lower (brighter) V magnitudes, allowing users to easily discern the relative brightness of stars.
+
+These methodologies enable users to not only explore the positions of celestial bodies but also gain insights into their physical characteristics.
+
 ## Work in Progress (WIP)
 Please note that StarScholar3D is currently a work in progress. Features are being actively developed and refined. Contributions, suggestions, and feedback are highly welcomed!
 
