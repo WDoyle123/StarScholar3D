@@ -7,8 +7,8 @@ from data_handler import results_to_csv, query_simbad, join_simbad
 from matplotlib import pyplot as plt
 
 # flags for toggling gif capture and plot display
-capture_gif_flag = True
-show_plot_flag = False
+capture_gif_flag = False
+show_plot_flag = True
 
 # flags for processing asterisms and constellations
 process_asterisms = True
