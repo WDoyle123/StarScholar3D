@@ -5,7 +5,7 @@ import pandas as pd
 
 from data_handler import get_data_frame, get_dictionary, join_simbad
 from calculations import star_data_calculator, find_closest_star_view
-from plotter import plot_3d_scatter, capture_gif
+from plotter import plot_3d_scatter, capture_gif, plot_3d_scatter_plotly
 from helper import greek_letter
 
 from matplotlib import pyplot as plt
@@ -52,6 +52,18 @@ def constellations(plot=False, gif=False):
 
         # plot the 3D scatter plot 
         fig, ax, view, = plot_3d_scatter( 
+                df_filtered.x_coordinate.values, \
+                df_filtered.y_coordinate.values, \
+                df_filtered.z_coordinate.values, \
+                df_filtered.rgb_color.values,    \
+                df_filtered.star_size.values,    \
+                df_filtered.iau_name.values,     \
+                title=title,                     \
+                view=(elevation, azimuth),       \
+                lines=False) 
+
+        # plot the 3D scatter plot 
+        fig = plot_3d_scatter_plotly(
                 df_filtered.x_coordinate.values, \
                 df_filtered.y_coordinate.values, \
                 df_filtered.z_coordinate.values, \

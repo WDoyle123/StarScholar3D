@@ -125,6 +125,97 @@ def plot_3d_scatter(x, y, z, rgb, star_size, iau_names=None, title=None, view=No
     
     return fig, ax, view
 
+import plotly.graph_objs as go
+
+def plot_3d_scatter_plotly(x, y, z, rgb, star_size, iau_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
+    # Create a Plotly scatter plot
+    
+    star_size = star_size / 10
+
+    scatter = go.Scatter3d(
+        x=x, y=y, z=z,
+        mode='markers+text' if iau_names is not None else 'markers',
+        marker=dict(
+            size=star_size,
+            color=rgb,
+            opacity=1.0
+        ),
+        text=iau_names,
+        textposition="top center",
+        textfont=dict(
+            color="white",
+            size=8
+        )
+    )
+
+    # Handle lines
+    line_data = []
+    if lines:
+        line_data.append(go.Scatter3d(
+            x=x, y=y, z=z,
+            mode='lines',
+            line=dict(
+                color='white',
+                width=1
+            )
+        ))
+
+        # Additional lines can be added similarly
+
+    # Combine scatter and line data
+    data = [scatter] + line_data
+
+    # Layout customization
+    layout = go.Layout(
+        scene=dict(
+            xaxis=dict(
+                title='',  # Empty string for x-axis label
+                showgrid=not no_grid_lines, 
+                zeroline=False, 
+                showticklabels=not no_grid_lines, 
+                backgroundcolor='black'
+            ),
+            yaxis=dict(
+                title='',  # Empty string for y-axis label
+                showgrid=not no_grid_lines, 
+                zeroline=False, 
+                showticklabels=not no_grid_lines, 
+                backgroundcolor='black'
+            ),
+            zaxis=dict(
+                title='',  # Empty string for z-axis label
+                showgrid=not no_grid_lines, 
+                zeroline=False, 
+                showticklabels=not no_grid_lines, 
+                backgroundcolor='black'
+            ),
+            bgcolor='black'
+
+        ),
+        title=title if show_title else None,
+        paper_bgcolor='black',
+        plot_bgcolor='black',
+        margin=dict(l=0, r=0, b=0, t=0)
+    )
+
+    # Create figure
+    fig = go.Figure(data=data, layout=layout)
+
+    # Set view angle
+    if view is not None:
+        zoom_factor = 0.05
+        fig.update_layout(scene_camera=dict(eye=dict(x=view[0]*zoom_factor, y=view[1]*zoom_factor, z=view[0]*zoom_factor)))
+
+    # Save the figure
+    html_directory = os.path.join('..', 'htmls')
+
+    if not os.path.exists(html_directory):
+        os.makedirs(html_directory)
+    html_path = os.path.join(html_directory, f'{title}_plot.html')
+    fig.write_html(html_path)
+
+    return fig
+
 def img_from_fig(fig):
     buf = io.BytesIO()
     fig.savefig(buf, format='png', dpi=90)
