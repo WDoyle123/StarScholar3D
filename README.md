@@ -10,7 +10,7 @@ StarScholar3D is an innovative project that leverages the extensive data from th
 - **Interactive Experience**: Enables users to explore and interact with the 3D star map.
 - **GIF Capture**: Enables the capturing of GIFs of the data visualisation.
 
-## Star Visualization Methodology
+## Star Visualisation Methodology
 In StarScholar3D, we employ specific astronomical metrics to enhance the visualisations:
 
 - **B-V Color Index**: The B-V color index is used in StarScholar3D to approximate the observed colour of stars. This index is a measure of the colour difference between a star's blue (B) and visual (V) magnitudes.
