@@ -155,7 +155,7 @@ def results_to_csv():
 
         df_filtered = df[df['hr'].isin(hr_names)].copy()
 
-        df_filtered['asterism'] = title
+        df_filtered['asterism'] = asterism_name
 
         asterism_data_array.append(df_filtered[['hr', 'asterism']])  
 
