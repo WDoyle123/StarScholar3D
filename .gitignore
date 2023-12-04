@@ -1,2 +1,5 @@
 starscholar/
 venv/
+
+htmls/*
+!htmls/README.md
