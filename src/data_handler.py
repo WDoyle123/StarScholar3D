@@ -98,6 +98,7 @@ from helper import greek_letter
 def results_to_csv():
     # Load and join dataframes
     df = join_simbad()
+    df = star_data_calculator(df)
     df2 = get_data_frame('iau_star_names.csv')
 
     # Join df and df2, including specific columns from df2
