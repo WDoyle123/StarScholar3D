@@ -184,21 +184,27 @@ def plot_3d_scatter_plotly(df, iau_names=None, title=None, view=None, lines=True
                 showgrid=not no_grid_lines, 
                 zeroline=False, 
                 showticklabels=not no_grid_lines, 
-                backgroundcolor='black'
+                backgroundcolor='black',
+                hoverformat='',
+                showspikes=False
             ),
             yaxis=dict(
                 title='',  # Empty string for y-axis label
                 showgrid=not no_grid_lines, 
                 zeroline=False, 
                 showticklabels=not no_grid_lines, 
-                backgroundcolor='black'
+                backgroundcolor='black',
+                hoverformat='',
+                showspikes=False
             ),
             zaxis=dict(
                 title='',  # Empty string for z-axis label
                 showgrid=not no_grid_lines, 
                 zeroline=False, 
                 showticklabels=not no_grid_lines, 
-                backgroundcolor='black'
+                backgroundcolor='black',
+                hoverformat='',
+                showspikes=False
             ),
             bgcolor='black'
 
