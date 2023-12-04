@@ -61,12 +61,7 @@ def asterisms(plot=False, gif=False):
 
         # plot the 3D scatter plot 
         fig = plot_3d_scatter_plotly(
-                df_filtered.x_coordinate.values, \
-                df_filtered.y_coordinate.values, \
-                df_filtered.z_coordinate.values, \
-                df_filtered.rgb_color.values,    \
-                df_filtered.star_size.values,    \
-                df_filtered.iau_name.values,     \
+                df_filtered,                    \
                 title=title,                     \
                 view=(int(elevation) + 90, int(azimuth) - 10),\
                 lines=True) 

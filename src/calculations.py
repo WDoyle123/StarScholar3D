@@ -127,17 +127,17 @@ def bv_color_to_rgb(bv_color):
 
 def assign_star_size(vmag):
     if vmag < 2:
-        size = 100  # Largest size for the brightest stars
+        size = 50  # Largest size for the brightest stars
     elif vmag < 3:
-        size = 50
-    elif vmag < 4:
         size = 25
+    elif vmag < 4:
+        size = 20
     elif vmag < 5:
-        size = 13
+        size = 15
     elif vmag < 6:
-        size = 6
+        size = 10
     else:
-        size = 3  # Smaller size for fainter stars
+        size = 5 # Smaller size for fainter stars
 
     return size
 

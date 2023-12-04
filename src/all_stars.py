@@ -23,11 +23,7 @@ def all_stars():
                                     lines=False)
             # plot the 3D scatter plot 
     fig = plot_3d_scatter_plotly(
-        df.x_coordinate.values, \
-        df.y_coordinate.values, \
-        df.z_coordinate.values, \
-        df.rgb_color.values,    \
-        df.star_size.values,    \
+        df,                     \
         title=title,            \
         lines=False)
 

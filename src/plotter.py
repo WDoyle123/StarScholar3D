@@ -127,32 +127,43 @@ def plot_3d_scatter(x, y, z, rgb, star_size, iau_names=None, title=None, view=No
 
 import plotly.graph_objs as go
 
-def plot_3d_scatter_plotly(x, y, z, rgb, star_size, iau_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
+def plot_3d_scatter_plotly(df, iau_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
     # Create a Plotly scatter plot
     
-    star_size = star_size / 10
+    df.star_size = df.star_size / 5
+    hover_texts = []
+    
+    for index, row in df.iterrows():
+        hover_text = f"Name: {row['iau_name']}<br>" \
+                     f"HR Name: {row['hr']}<br>"    \
+                     f"Distance (Parsecs): {round(row['distance'], 2)}"
+
+        hover_texts.append(hover_text)
+
 
     scatter = go.Scatter3d(
-        x=x, y=y, z=z,
-        mode='markers+text' if iau_names is not None else 'markers',
+        x=df.x_coordinate, y=df.y_coordinate, z=df.z_coordinate,
+        mode='markers+text' if df.iau_name is not None else 'markers',
         marker=dict(
-            size=star_size,
-            color=rgb,
+            size=df.star_size,
+            color=df.rgb_color,
             opacity=1.0
         ),
-        text=iau_names,
+        text=df.iau_name,
+        hovertext=hover_texts,
         textposition="top center",
         textfont=dict(
             color="white",
-            size=8
-        )
+            size=12
+        ),
+        hoverinfo='text'
     )
 
     # Handle lines
     line_data = []
     if lines:
         line_data.append(go.Scatter3d(
-            x=x, y=y, z=z,
+            x=df.x_coordinate, y=df.y_coordinate, z=df.z_coordinate,
             mode='lines',
             line=dict(
                 color='white',
