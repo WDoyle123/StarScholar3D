@@ -4,17 +4,21 @@ def print_all(df):
 
     print(len(df))
 
+import re
+
 def greek_letter(df, greek_letter):
     '''
-    Exclude rows where the alt_name in the data frame contains a greek letter
-    for example:
+    Exclude rows where the alt_name in the data frame starts with a greek letter
+    for the specified constellation and is improperly followed by another constellation abbreviation.
+    Allow rows where the Greek letter is repeated or correctly used.
 
-    Taurus constellations is Tau (a greek letter but also short for Taurus)
-    The data_j2000.csv contains alt_names such as Tau Alp and UMa Tau
+    [Your existing documentation]
+
     '''
-    pattern = r"(?!.*" + greek_letter + " " + greek_letter + ").*" + greek_letter + r"$"
+    # Adjusted pattern to use non-capturing groups
+    pattern_remove = re.compile(r"(?:\d+" + re.escape(greek_letter) + r"(?:\d+\w+|\s+\w+))|(?:^" + re.escape(greek_letter) + r"(?:\s+)?(?:\d+\w+|\w+))")
 
-    filtered_df = df[~df.alt_name.str.match(pattern)]
-
+    # Apply the pattern and filter
+    filtered_df = df[~df['alt_name'].str.contains(pattern_remove, regex=True)]
     return filtered_df
 

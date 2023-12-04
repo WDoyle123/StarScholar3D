@@ -104,6 +104,8 @@ def results_to_csv():
     df = df.merge(df2[['hr', 'Origin', 'Etymology Note', 'Source']], 
                   on='hr',  how='left', suffixes=('_simbad', '_iau'))
 
+    df = df.drop_duplicates(subset=['hr'])
+
     # Rename columns
     df.rename(columns={'Origin': 'origin', 'Etymology Note': 'note', 'Source': 'source'}, inplace=True)
 
@@ -116,23 +118,50 @@ def results_to_csv():
         # Filter dataframe for stars in the current constellation
         mask = df['alt_name'].str.contains(alt_name, na=False)
         df_filtered = df[mask]
-
-        # Special processing for certain constellations
-        if alt_name in ['Del', 'Tau']:
-            df_filtered = greek_letter(df_filtered, alt_name)
-
+        
         # Calculate additional star data
         df_filtered = star_data_calculator(df_filtered)
 
         # Assign constellation names
         df_filtered['constellation_alt_name'] = alt_name
         df_filtered['constellation_common_name'] = common_name
+ 
+        # 40Tau Lib # LIB
+        # 10Alp Tau # TAU
+    
+        # if constellation alt name eg Tau (Taurus)
+        if alt_name in ['Del', 'Tau']:
+            # drop all rows where Tau is first
+            # this leaves only 10Alp Tau
+            df_filtered = greek_letter(df_filtered, alt_name)
 
         # Append to the main list
-        constellation_data_array.append(df_filtered)
+        constellation_data_array.append(df_filtered[['hr','constellation_common_name','constellation_alt_name']])
 
     # Combine all constellation data into a single dataframe
-    result_df = pd.concat(constellation_data_array)
+    constellation_df = pd.concat(constellation_data_array)
+    result_df = pd.merge(df, constellation_df, on='hr', how='left')
+
+    asterism_names = get_dictionary('asterism_names')
+
+    asterism_data_array = []
+    
+    df = join_simbad()
+    
+    for asterism_name, hr_names in asterism_names.items():
+    
+        title = asterism_name.lower().replace(' ', '_')
+
+        df_filtered = df[df['hr'].isin(hr_names)].copy()
+
+        df_filtered['asterism'] = title
+
+        asterism_data_array.append(df_filtered[['hr', 'asterism']])  
+
+    asterism_df = pd.concat(asterism_data_array)
+
+    # Merge asterism data into the result dataframe
+    result_df = pd.merge(result_df, asterism_df, on='hr', how='left')
 
     # Save the combined dataframe to CSV
     result_df.to_csv('../data/all_constellations_and_their_stars.csv', index=False)
@@ -165,13 +194,11 @@ def join_simbad():
 
     df_simbad['ra'] = df_simbad.apply(lambda row: convert_ra_to_deg(row['ra']), axis=1)
     df_simbad['dec'] = df_simbad.apply(lambda row: convert_dec_to_deg(row['dec']), axis=1)
-    
-    update = df_ysb[df_ysb['hr'] == 7539].index
 
     # Merge the two DataFrames on 'hr' column with suffixes
     combined_df = pd.merge(df_ysb, df_simbad, on='hr', how='inner', suffixes=('_ysb', '_simbad'))
     combined_df = pd.merge(combined_df, df_iau[['hr', 'iau_name']], on='hr', how='left')
-
+    
     # Handling missing parallax values
     combined_df['parallax_simbad'] = combined_df['parallax_simbad'].replace('~ ', 0)
     combined_df['parallax_simbad'] = combined_df['parallax_simbad'].astype(float)
