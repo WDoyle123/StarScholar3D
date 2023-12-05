@@ -11,6 +11,16 @@ from helper import greek_letter
 from matplotlib import pyplot as plt
 
 def constellations(plot=False, gif=False):
+    '''
+    Loads constellation data and makes a fig with the options to show plot and make gif of asterism
+
+    Args:
+    plot: if true shows the generated plot
+    gif: if true generates a gif of the figure
+
+    Returns: None
+    '''
+
     print("Starting Constellation processing...")
 
     start_time = time.time()

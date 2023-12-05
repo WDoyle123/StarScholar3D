@@ -7,8 +7,10 @@ from plotter import plot_3d_scatter, plot_3d_scatter_plotly
 
 def all_stars():
 
+    # get data from ysb, simbad and iau
     df = join_simbad()
         
+    # calculate star data such as xyz coords 
     df = star_data_calculator(df)
     
     title='all_stars'

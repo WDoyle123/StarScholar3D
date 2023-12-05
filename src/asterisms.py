@@ -9,12 +9,24 @@ from calculations import star_data_calculator, find_closest_star_view
 from plotter import plot_3d_scatter, capture_gif, plot_3d_scatter_plotly
 
 def asterisms(plot=False, gif=False):
+    '''
+    Loads asterism data and makes a fig with the options to show plot and make gif of asterism
+
+    Args:
+    plot: if true shows the generated plot
+    gif: if true generates a gif of the figure
+
+    Returns: None
+    '''
     print("Starting Asterism processing...")
 
+    # used in timing of function
     start_time = time.time()
 
+    # a dictionary containing the asterism and its stars
     asterisms_dictionary = get_dictionary('asterism_names')
 
+    # find length of df for timing of function
     len_of_df = len(asterisms_dictionary)
     counter = 0
 
@@ -25,6 +37,7 @@ def asterisms(plot=False, gif=False):
         unchanged_title = asterism_name
         title = asterism_name.lower().replace(' ', '_')
 
+        # get data from ysb and simbad 
         df = join_simbad()
         
         # .copy to avoid copy of sclice warning
