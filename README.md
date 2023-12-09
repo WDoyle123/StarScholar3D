@@ -1,14 +1,14 @@
 # StarScholar3D
 
 ## Contents
-1. [Overview](#overview)
-2. [Features](#features)
-3. [Star Visualisation Methodology](#star-visualisation-methodology)
-4. [Installation](#installation)
-5. [Multiprocessing and Performance](#multiprocessing-and-performance)
-6. [Visualisations](#visualisations)
-7. [License](#license)
-8. [Acknowledgments](#acknowledgments)
+- [Overview](#overview)
+- [Features](#features)
+- [Star Visualisation Methodology](#star-visualisation-methodology)
+- [Installation](#installation)
+- [Multiprocessing and Performance](#multiprocessing-and-performance)
+- [Visualisations](#visualisations)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 ## Overview
 StarScholar3D is an innovative project that leverages the extensive data from the Yale Bright Star catalogue. This project is centered around the visualisation and study of stars, constellations, and asterisms in a dynamic 3D environment. By transforming equatorial coordinates into cartesian coordinates, StarScholar3D offers a unique perspective on the celestial bodies.
@@ -113,3 +113,6 @@ see the [LICENSE](LICENSE) file for details.
 - [Yale Bright Star Catalogue](https://heasarc.gsfc.nasa.gov/db-perl/W3Browse/w3table.pl?tablehead=name%3Dbsc5p&Action=More+Options)
 - [International Astronomical Union](https://www.iau.org/public/themes/naming_stars/)
 - [SIMBAD](http://simbad.cds.unistra.fr/simbad/sim-fscript)
+
+
+## [Back to Top](#starscholar3d)
