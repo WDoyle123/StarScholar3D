@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')  # Use Agg backend
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import imageio
@@ -7,6 +9,7 @@ import numpy as np
 import os
 from PIL import Image
 import pandas as pd
+import gc
 
 def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='white', linewidth=1):
     if star1 in star_names and star2 in star_names:
@@ -22,7 +25,7 @@ def draw_line_between_stars(ax, star_names, star_coords, star1, star2, color='wh
 def plot_3d_scatter(x, y, z, rgb, star_size, iau_names=None, title=None, view=None, lines=True, no_grid_lines=True, show_title=False):
  
     # create figure
-    fig = plt.figure(figsize=(10, 8))
+    fig = plt.figure(figsize=(8, 8))
     fig.set_facecolor('black')
 
     # create 3d projection
@@ -34,7 +37,10 @@ def plot_3d_scatter(x, y, z, rgb, star_size, iau_names=None, title=None, view=No
 
     # add annotations if star names are provided
     if iau_names is not None:
-        star_names_fontsize = 8
+        if len(iau_names) < 8:
+            star_names_fontsize = 14
+        else: 
+            star_names_fontsize = 8
         for i in range(len(x)):
                 name_to_plot = '' if pd.isna(iau_names[i]) else iau_names[i]
                 ax.text(x[i], y[i], z[i], name_to_plot, color='white', fontsize=star_names_fontsize, alpha=0.75)
@@ -121,7 +127,7 @@ def plot_3d_scatter(x, y, z, rgb, star_size, iau_names=None, title=None, view=No
     figures_path = os.path.join(figures_directory, f'{title}_plot.png')
 
     # saves the plot to the figures file
-    fig.savefig(figures_path, bbox_inches='tight', facecolor=fig.get_facecolor(), dpi=180)
+    fig.savefig(figures_path, bbox_inches='tight', facecolor=fig.get_facecolor(), dpi=80)
     
     return fig, ax, view
 
@@ -235,7 +241,7 @@ def plot_3d_scatter_plotly(df, iau_names=None, title=None, view=None, lines=True
 
 def img_from_fig(fig):
     buf = io.BytesIO()
-    fig.savefig(buf, format='png', dpi=90)
+    fig.savefig(buf, format='png', dpi=80)
     buf.seek(0)
     img_arr = np.frombuffer(buf.getvalue(), dtype=np.uint8)
     buf.close()
@@ -278,12 +284,16 @@ def capture_gif(title, fig, ax, start_view, of_type):
             ax.view_init(elev=elev, azim=start_azim)
             img = img_from_fig(fig)
             frames.append(img)
+            plt.close(fig)
+            gc.collect()
     
         # rotate 360 degrees
         for angle in range(start_azim, start_azim +  360, 1):
             ax.view_init(elev=30, azim=angle)
             img = img_from_fig(fig)
             frames.append(img)
+            plt.close(fig)
+            gc.collect()
 
         # transistion to start_elev
         for step in range(steps_elev + 1):
@@ -291,6 +301,8 @@ def capture_gif(title, fig, ax, start_view, of_type):
             ax.view_init(elev=elev, azim=start_azim)
             img = img_from_fig(fig)
             frames.append(img)
+            plt.close(fig)
+            gc.collect()
 
     if of_type == 'constellation' or title == 'all_stars':
 
@@ -300,6 +312,8 @@ def capture_gif(title, fig, ax, start_view, of_type):
             ax.view_init(elev=30, azim=angle)
             img = img_from_fig(fig)
             frames.append(img)
+            plt.close(fig)
+            gc.collect()
 
     # path to animations directory
     animations_directory = os.path.join('..', 'animations')

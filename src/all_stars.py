@@ -24,7 +24,7 @@ def all_stars():
                                     title=title,
                                     lines=False)
             # plot the 3D scatter plot 
-    fig = plot_3d_scatter_plotly(
+    fig1 = plot_3d_scatter_plotly(
         df,                     \
         title=title,            \
         lines=False)
