@@ -55,7 +55,6 @@ To get started with StarScholar3D, follow these steps:
 	process_asterisms = True       # Set to True to process asterisms, False to skip
 	process_constellations = True  # Set to True to process constellations, False to skip
 	process_all_stars = True       # Set to True to process all stars, False to skip
-
 	```
 5. **Run the Application**:
 	```
