@@ -21,7 +21,7 @@ def asterisms(plot=False, gif=False):
     This function fetches the dictionary of asterisms, sets up multiprocessing, and processes each
     asterism using multiple processes for improved performance.
     """
-    print("Starting Asterism processing...")
+    print("Starting Asterism processing with Multiprocessing...")
     start_time = time.time()
 
     # Fetching the asterism data
@@ -49,10 +49,11 @@ def process_asterism(asterism_data, plot=False, gif=False):
     gif (bool): If True, generates a gif of the plot.
 
     This function takes the data for a single asterism, processes it, and optionally generates a plot or gif.
-    It is designed to be used with multiprocessing.
     """
     # get both name types from the dictionary
     asterism_name, hr_names = asterism_data
+
+    print(f'Processing Asterism: {asterism_name}')
 
     # convert to lower case and if common_name has a space change to underscore
     unchanged_title = asterism_name
@@ -112,5 +113,4 @@ def process_asterism(asterism_data, plot=False, gif=False):
         plt.close()
 
     plt.close()
-
     return None

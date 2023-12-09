@@ -8,14 +8,14 @@ from matplotlib import pyplot as plt
 
 from multiprocessing import Pool
 
-# flags for toggling gif capture and plot display
-capture_gif_flag = True
-show_plot_flag = False
+# Flags for toggling GIF capture and plot display
+capture_gif_flag = True  # Set to True to enable GIF capture, False to disable
+show_plot_flag = False   # Set to True to display plots, False to hide them
 
-# flags for processing asterisms and constellations
-process_asterisms = True
-process_constellations = False
-process_all_stars = False
+# Flags for processing different astronomical features
+process_asterisms = True       # Set to True to process asterisms, False to skip
+process_constellations = True  # Set to True to process constellations, False to skip
+process_all_stars = True       # Set to True to process all stars, False to skip
 
 if process_all_stars:
     print('all_stars')
