@@ -93,9 +93,9 @@ Below are some visualisations created using StarScholar3D:
 
 *Visualisation of the Big Dipper Asterism.*
 
-![Cassiopeia](/animations/constellations/rotating_cassiopeia.gif)
+![Cassiopeia](/animations/constellations/rotating_canis_minor.gif)
 
-*Visualisation of the Cassiopeia Constellation.*
+*Visualisation of the Canis Minor Constellation.*
  
 ## License
 see the [LICENSE](LICENSE) file for details.
