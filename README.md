@@ -62,9 +62,25 @@ To get started with StarScholar3D, follow these steps:
 	python main.py
 	```
 
-### Note:
+## Multiprocessing and Performance
 
-Ensure you have sufficient RAM for optimal performance, especially when running the multiprocessing features.
+StarScholar3D efficiently processes large volumes of astronomical data using Python's multiprocessing capabilities. This approach significantly accelerates data processing by distributing tasks across multiple CPU cores. Here's a snippet demonstrating how multiprocessing is integrated:
+
+```
+# Determine the number of processes to use, leaving one core free
+# Adjust this value if needed
+num_processes = os.cpu_count() - 1
+
+with Pool(processes=num_processes) as pool:
+	# Parallel processing of each asterism
+    args = [(item, plot, gif) for item in asterism_items]
+    pool.starmap(process_asterism, args)
+```
+The code dynamically calculates the number of available CPU cores and reserves one to ensure system stability. 
+
+**It is important to adjust num_processes based on your system's RAM capacity to avoid overloading.**
+
+ For instance, with 16GB RAM + 4GB SWAP, using 6 cores might be optimal.
 
 ## Visualisations
 Below are some visualisations created using StarScholar3D:
@@ -80,22 +96,6 @@ Below are some visualisations created using StarScholar3D:
 ![Cassiopeia](/animations/constellations/rotating_cassiopeia.gif)
 
 *Visualisation of the Cassiopeia Constellation.*
-
-## Code Snippet
-
-StarScholar3D efficiently processes large volumes of astronomical data using Python's multiprocessing capabilities. This approach significantly accelerates data processing by distributing tasks across multiple CPU cores. Here's a snippet demonstrating how multiprocessing is integrated:
-
-```
-# Determine the number of processes to use, leaving one core free
-# Adjust this value if needed
-num_processes = os.cpu_count() - 1
-
-with Pool(processes=num_processes) as pool:
-	# Parallel processing of each asterism
-    args = [(item, plot, gif) for item in asterism_items]
-    pool.starmap(process_asterism, args)
-```
-The code dynamically calculates the number of available CPU cores and reserves one to ensure system stability. It's important to adjust num_processes based on your system's RAM capacity to avoid overloading. For instance, with 16GB RAM + 4GB SWAP, using 6 cores might be optimal.
  
 ## License
 see the [LICENSE](LICENSE) file for details.
