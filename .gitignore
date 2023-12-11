@@ -3,3 +3,6 @@ venv/
 
 htmls/*
 !htmls/README.md
+
+animations/asterisms/*
+animations/constellations/*
