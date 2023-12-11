@@ -5,4 +5,7 @@ htmls/*
 !htmls/README.md
 
 animations/asterisms/*
+!animations/asterisms/.gitkeep
+
 animations/constellations/*
+!animations/constellations/.gitkeep

@@ -99,11 +99,11 @@ Below are some visualisations created using StarScholar3D:
 
 *Visualisation of all stars in the Yale Bright Stars Catalogue*
 
-![Big Dipper](animations/demos/asterisms/rotating_big_dipper.gif)
+![Big Dipper](animations/demos/rotating_big_dipper.gif)
 
 *Visualisation of the Big Dipper Asterism.*
 
-![Cassiopeia](animations/demos/constellations/rotating_canis_minor.gif)
+![Cassiopeia](animations/demos/rotating_canis_minor.gif)
 
 *Visualisation of the Canis Minor Constellation.*
  
