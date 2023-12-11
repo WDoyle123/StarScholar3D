@@ -33,7 +33,7 @@ These methodologies enable users to not only explore the positions of celestial 
 To get started with StarScholar3D, follow these steps:
 
 1. **Clone the Repository**:
-    Make sure to use `--depth 1` otherwise the download will be over 1GB
+    Make sure to use `--depth 1` otherwise the download will be over 1GB compared to 7.5MB
 	```
 	git clone --depth 1 https://github.com/WDoyle123/StarScholar3D.git
 	cd StarScholar3D
