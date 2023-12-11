@@ -177,8 +177,6 @@ def plot_3d_scatter_plotly(df, iau_names=None, title=None, view=None, lines=True
             )
         ))
 
-        # Additional lines can be added similarly
-
     # Combine scatter and line data
     data = [scatter] + line_data
 
