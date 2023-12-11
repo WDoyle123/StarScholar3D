@@ -11,9 +11,6 @@ def greek_letter(df, greek_letter):
     Exclude rows where the alt_name in the data frame starts with a greek letter
     for the specified constellation and is improperly followed by another constellation abbreviation.
     Allow rows where the Greek letter is repeated or correctly used.
-
-    [Your existing documentation]
-
     '''
     # Adjusted pattern to use non-capturing groups
     pattern_remove = re.compile(r"(?:\d+" + re.escape(greek_letter) + r"(?:\d+\w+|\s+\w+))|(?:^" + re.escape(greek_letter) + r"(?:\s+)?(?:\d+\w+|\w+))")
