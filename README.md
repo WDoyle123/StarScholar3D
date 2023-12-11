@@ -33,6 +33,7 @@ These methodologies enable users to not only explore the positions of celestial 
 To get started with StarScholar3D, follow these steps:
 
 1. **Clone the Repository**:
+    Make sure to use `--depth 1` otherwise the download will be over 1GB
 	```
 	git clone --depth 1 https://github.com/WDoyle123/StarScholar3D.git
 	cd StarScholar3D
@@ -94,15 +95,15 @@ The code dynamically calculates the number of available CPU cores and reserves o
 ## Visualisations
 Below are some visualisations created using StarScholar3D:
 
-![All Stars](/demos/rotating_all_stars.gif)
+![All Stars](animations/demos/rotating_all_stars.gif)
 
 *Visualisation of all stars in the Yale Bright Stars Catalogue*
 
-![Big Dipper](/demos/asterisms/rotating_big_dipper.gif)
+![Big Dipper](animations/demos/asterisms/rotating_big_dipper.gif)
 
 *Visualisation of the Big Dipper Asterism.*
 
-![Cassiopeia](/demos/constellations/rotating_canis_minor.gif)
+![Cassiopeia](animations/demos/constellations/rotating_canis_minor.gif)
 
 *Visualisation of the Canis Minor Constellation.*
  
