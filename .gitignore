@@ -6,3 +6,6 @@ htmls/*
 
 animations/asterisms/*
 animations/constellations/*
+
+!animations/asterisms
+!animations/constellations
